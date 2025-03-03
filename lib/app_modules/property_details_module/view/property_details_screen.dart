@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/booking_module/view/booking_screen.dart';
+import 'package:serene_user_app/app_modules/property_details_module/widgets/events_section_widget.dart';
 import 'package:serene_user_app/app_modules/property_details_module/widgets/host_details_widget.dart';
 import 'package:serene_user_app/app_modules/property_details_module/widgets/property_details_widget.dart';
 import 'package:serene_user_app/app_modules/property_details_module/widgets/review_section_widget.dart';
@@ -63,6 +64,20 @@ class PropertyDetailsScreen extends StatefulWidget {
       'images': [],
     },
   ];
+
+  // Dummy data for events
+  final event = {
+    'title': 'Summer Music Festival',
+    'description':
+        'Join us for a weekend of live music, food, and fun activities!',
+    'startDate': '2023-07-15',
+    'endDate': '2023-07-17',
+    'images': [
+      'https://picsum.photos/seed/event1/400/300',
+      'https://picsum.photos/seed/event2/400/300',
+      'https://picsum.photos/seed/event3/400/300',
+    ],
+  };
 }
 
 class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
@@ -96,6 +111,10 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
             // Property Details
             PropertyDetailsWidget(property: widget.property),
+            const SizedBox(height: 24.0),
+
+            // Events Section
+            EventsSectionWidget(event: widget.event),
             const SizedBox(height: 24.0),
 
             // Reviews Section

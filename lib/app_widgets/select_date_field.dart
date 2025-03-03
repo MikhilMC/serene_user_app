@@ -50,7 +50,7 @@ class _SelectDateFieldState extends State<SelectDateField> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        print("Date field tapped"); // Debugging
+        // print("Date field tapped"); // Debugging
         _selectDate();
       },
       child: InputDecorator(

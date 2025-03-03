@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/introduction_screen_module/view/introduction_screen.dart';
+import 'package:serene_user_app/app_modules/register_module/bloc/user_register_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,16 +13,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Serene',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.firstColor,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => UserRegisterBloc(),
         ),
-        useMaterial3: true,
+      ],
+      child: MaterialApp(
+        title: 'Serene',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: AppColors.firstColor,
+          ),
+          useMaterial3: true,
+        ),
+        home: const IntroductionScreen(),
       ),
-      home: const IntroductionScreen(),
     );
   }
 }

@@ -24,11 +24,11 @@ class MultilineFormField extends StatelessWidget {
       controller: feedbackController,
       maxLines: 5,
       decoration: InputDecoration(
-        hintText: "Write your feedback here...",
+        hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
-        labelText: "Feedback",
+        labelText: labelText,
         prefixIcon: prefixIcon,
       ),
       validator: validatorFunction,

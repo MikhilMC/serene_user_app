@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ class BookingReviewScreen extends StatefulWidget {
 class _BookingReviewScreenState extends State<BookingReviewScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _feedbackController = TextEditingController();
-  int _rating = 0; // Current rating (1-5)
+  double _rating = 0.0; // Current rating (0.0 to 5.0)
   final List<File> _images = []; // List of uploaded images
 
   @override
@@ -55,9 +54,9 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
   // Function to handle form submission
   void _submitReview() {
     FocusScope.of(context).unfocus();
-    if (_rating == 0) {
+    if (_rating == 0.0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please provide a rating (1-5 stars).")),
+        SnackBar(content: Text("Please provide a rating (0.5 to 5 stars).")),
       );
       return;
     }
@@ -69,7 +68,7 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
 
     // Clear the form
     setState(() {
-      _rating = 0;
+      _rating = 0.0;
       _feedbackController.clear();
       _images.clear();
     });
@@ -80,6 +79,13 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
         builder: (context) => HomeScreen(),
       ),
     );
+  }
+
+  // Function to handle star tap
+  void _onStarTap(double rating) {
+    setState(() {
+      _rating = rating;
+    });
   }
 
   @override
@@ -106,17 +112,19 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(5, (index) {
-                    return IconButton(
-                      icon: Icon(
-                        Icons.star,
-                        size: 40,
-                        color: index < _rating ? Colors.amber : Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _rating = index + 1;
-                        });
+                    return GestureDetector(
+                      onTapDown: (details) {
+                        // Calculate the tapped position within the star
+                        final double tapPosition = details.localPosition.dx;
+                        final double starWidth = 40; // Width of each star
+                        final double halfStarThreshold = starWidth / 2;
+
+                        // Determine if the tap is on the left or right side of the star
+                        final double rating = index +
+                            (tapPosition < halfStarThreshold ? 0.5 : 1.0);
+                        _onStarTap(rating);
                       },
+                      child: _buildStar(index),
                     );
                   }),
                 ),
@@ -207,6 +215,19 @@ class _BookingReviewScreenState extends State<BookingReviewScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  // Function to build a star with half-star support
+  Widget _buildStar(int index) {
+    final double starRating = index + 1.0;
+    final bool isHalfStar = _rating >= starRating - 0.5 && _rating < starRating;
+    final bool isFullStar = _rating >= starRating;
+
+    return Icon(
+      isHalfStar ? Icons.star_half : Icons.star,
+      size: 40,
+      color: isFullStar || isHalfStar ? Colors.amber : Colors.grey,
     );
   }
 }
