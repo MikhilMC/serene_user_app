@@ -30,16 +30,18 @@ class _GooglePayState extends State<GooglePay> {
   void _googlePay() {
     // Handle Google Pay payment
     if (_upiController.text.isNotEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Payment successful!'),
-        ),
+      AppHelper.showCustomSnackBar(
+        context,
+        "UPI Payment successful!",
       );
       Future.delayed(Duration(seconds: 2), () {
         if (mounted) {
           Navigator.pop(context);
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+            (Route<dynamic> route) => false, // Remove all previous routes
+          );
         }
       });
     } else {

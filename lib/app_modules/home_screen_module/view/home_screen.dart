@@ -160,10 +160,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 20,
                 ),
               ),
-              onTap: () => Navigator.of(context).pushReplacement(
+              onTap: () => Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(
                   builder: (context) => LoginScreen(),
                 ),
+                (Route<dynamic> route) => false, // Remove all previous routes
               ),
             ),
           ],

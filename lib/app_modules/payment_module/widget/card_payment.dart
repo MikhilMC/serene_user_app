@@ -37,16 +37,18 @@ class _CardPaymentState extends State<CardPayment> {
   void _cardPayment() {
     // Handle card payment
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Payment successful!'),
-        ),
+      AppHelper.showCustomSnackBar(
+        context,
+        "Card payment successful!",
       );
       Future.delayed(Duration(seconds: 2), () {
         if (mounted) {
-          Navigator.pop(context);
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomeScreen()));
+          Navigator.pop(context); // Close the current screen
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+            (Route<dynamic> route) => false, // Remove all previous routes
+          );
         }
       });
     } else {

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/view/home_screen.dart';
 import 'package:serene_user_app/app_modules/payment_module/widget/payment_container.dart';
+import 'package:serene_user_app/app_utils/app_helper.dart';
 import 'package:serene_user_app/app_widgets/custom_button.dart';
 
 class CashOnArrival extends StatefulWidget {
@@ -20,16 +21,18 @@ class CashOnArrival extends StatefulWidget {
 class _CashOnArrivalState extends State<CashOnArrival> {
   void _cashOnArrival() {
     // Handle cash on arrival payment
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Payment will be done on arrival'),
-      ),
+    AppHelper.showCustomSnackBar(
+      context,
+      "Payment will be done on arrival",
     );
     Future.delayed(Duration(seconds: 2), () {
       if (mounted) {
         Navigator.pop(context);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+          (Route<dynamic> route) => false, // Remove all previous routes
+        );
       }
     });
   }
