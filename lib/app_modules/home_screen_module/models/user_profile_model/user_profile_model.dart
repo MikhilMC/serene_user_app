@@ -1,15 +1,16 @@
 // To parse this JSON data, do
 //
-//     final loginDataModel = loginDataModelFromJson(jsonString);
+//     final userProfileModel = userProfileModelFromJson(jsonString);
 
 import 'dart:convert';
 
-LoginDataModel loginDataModelFromJson(String str) =>
-    LoginDataModel.fromJson(json.decode(str));
+UserProfileModel userProfileModelFromJson(String str) =>
+    UserProfileModel.fromJson(json.decode(str));
 
-String loginDataModelToJson(LoginDataModel data) => json.encode(data.toJson());
+String userProfileModelToJson(UserProfileModel data) =>
+    json.encode(data.toJson());
 
-class LoginDataModel {
+class UserProfileModel {
   int id;
   String username;
   String email;
@@ -19,7 +20,7 @@ class LoginDataModel {
   String phoneNumber;
   DateTime dateOfBirth;
 
-  LoginDataModel({
+  UserProfileModel({
     required this.id,
     required this.username,
     required this.email,
@@ -30,7 +31,8 @@ class LoginDataModel {
     required this.dateOfBirth,
   });
 
-  factory LoginDataModel.fromJson(Map<String, dynamic> json) => LoginDataModel(
+  factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
+      UserProfileModel(
         id: json["id"],
         username: json["username"],
         email: json["email"],

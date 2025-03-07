@@ -148,35 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             ListTile(
-              leading: Icon(
-                Icons.history,
-                color: AppColors.firstColor,
-              ),
-              title: const Text(
-                'Booking History',
-                style: TextStyle(
-                  color: AppColors.firstColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              onTap: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => BookingHistoryScreen(
-                //       bookingHistory: generateRandomBookingHistory(15),
-                //     ),
-                //   ),
-                // );
-              },
-            ),
-            ListTile(
               leading: const Icon(
                 Icons.logout,
                 color: AppColors.firstColor,
               ),
               title: const Text(
-                'LogOut',
+                'Log out',
                 style: TextStyle(
                   color: AppColors.firstColor,
                   fontWeight: FontWeight.bold,

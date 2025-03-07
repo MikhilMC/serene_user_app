@@ -4,4 +4,5 @@ class AppUrls {
 
   static const String userRegisterUrl = "$userAppUrl/register/";
   static const String userLoginUrl = "$userAppUrl/login/";
+  static const String getProfileDataUrl = "$userAppUrl/profile/";
 }

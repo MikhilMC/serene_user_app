@@ -121,12 +121,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             loading: () {},
             success: (response) {
               if (response.status == "success") {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "User Registration Successfull",
-                    ),
-                  ),
+                AppHelper.showCustomSnackBar(
+                  context,
+                  "User Registration Successfull",
                 );
 
                 Navigator.pushReplacement(

@@ -2,13 +2,9 @@
 //
 //     final loginResponseModel = loginResponseModelFromJson(jsonString);
 
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
-import 'package:serene_user_app/app_modules/register_module/model/user_data_model/user_data_model.dart';
-
-part 'login_response_model.freezed.dart';
-part 'login_response_model.g.dart';
+import 'package:serene_user_app/app_modules/login_module/model/login_data_model/login_data_model.dart';
 
 LoginResponseModel loginResponseModelFromJson(String str) =>
     LoginResponseModel.fromJson(json.decode(str));
@@ -16,14 +12,27 @@ LoginResponseModel loginResponseModelFromJson(String str) =>
 String loginResponseModelToJson(LoginResponseModel data) =>
     json.encode(data.toJson());
 
-@freezed
-class LoginResponseModel with _$LoginResponseModel {
-  const factory LoginResponseModel({
-    String? status,
-    String? message,
-    UserDataModel? user,
-  }) = _LoginResponseModel;
+class LoginResponseModel {
+  String status;
+  String message;
+  LoginDataModel user;
+
+  LoginResponseModel({
+    required this.status,
+    required this.message,
+    required this.user,
+  });
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) =>
-      _$LoginResponseModelFromJson(json);
+      LoginResponseModel(
+        status: json["status"],
+        message: json["message"],
+        user: LoginDataModel.fromJson(json["user"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "status": status,
+        "message": message,
+        "user": user.toJson(),
+      };
 }

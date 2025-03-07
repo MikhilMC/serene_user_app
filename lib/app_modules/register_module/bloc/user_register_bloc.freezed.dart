@@ -656,8 +656,6 @@ abstract class _$$UserRegistrationSuccessImplCopyWith<$Res> {
       __$$UserRegistrationSuccessImplCopyWithImpl<$Res>;
   @useResult
   $Res call({UserRegisterResponseModel response});
-
-  $UserRegisterResponseModelCopyWith<$Res> get response;
 }
 
 /// @nodoc
@@ -682,16 +680,6 @@ class __$$UserRegistrationSuccessImplCopyWithImpl<$Res>
           : response // ignore: cast_nullable_to_non_nullable
               as UserRegisterResponseModel,
     ));
-  }
-
-  /// Create a copy of UserRegisterState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $UserRegisterResponseModelCopyWith<$Res> get response {
-    return $UserRegisterResponseModelCopyWith<$Res>(_value.response, (value) {
-      return _then(_value.copyWith(response: value));
-    });
   }
 }
 

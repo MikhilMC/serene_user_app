@@ -6,8 +6,9 @@ import 'package:serene_user_app/app_constants/app_urls.dart';
 import 'package:serene_user_app/app_modules/login_module/class/login_details.dart';
 import 'package:serene_user_app/app_modules/login_module/model/login_response_model/login_response_model.dart';
 
-Future<LoginResponseModel> userLogin(
-    {required LoginDetails loginDetails}) async {
+Future<LoginResponseModel> userLogin({
+  required LoginDetails loginDetails,
+}) async {
   try {
     Map<String, dynamic> params = {
       "email": loginDetails.email,

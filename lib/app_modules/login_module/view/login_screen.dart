@@ -66,12 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
           state.whenOrNull(
             success: (loginResponseModel) {
               if (loginResponseModel.status == "success") {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "Success: ${loginResponseModel.message!}",
-                    ),
-                  ),
+                AppHelper.showCustomSnackBar(
+                  context,
+                  "Success: ${loginResponseModel.message}",
                 );
 
                 Navigator.pushReplacement(
