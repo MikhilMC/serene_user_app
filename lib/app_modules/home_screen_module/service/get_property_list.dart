@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:serene_user_app/app_constants/app_urls.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/models/property_list_model/property_model.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/models/property_model/property_model.dart';
 
 Future<List<PropertyModel>> getPropertyList({
   required String place,

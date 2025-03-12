@@ -13,6 +13,9 @@ String propertyModelToJson(List<PropertyModel> data) =>
 
 class PropertyModel {
   int id;
+  List<String> propertyImages;
+  String profilePicture;
+  String idProof;
   String name;
   String email;
   String phoneNumber;
@@ -24,8 +27,6 @@ class PropertyModel {
   String longitude;
   String description;
   String amenities;
-  String profilePicture;
-  String idProof;
   String rate;
   String status;
   String rating;
@@ -33,6 +34,9 @@ class PropertyModel {
 
   PropertyModel({
     required this.id,
+    required this.propertyImages,
+    required this.profilePicture,
+    required this.idProof,
     required this.name,
     required this.email,
     required this.phoneNumber,
@@ -44,8 +48,6 @@ class PropertyModel {
     required this.longitude,
     required this.description,
     required this.amenities,
-    required this.profilePicture,
-    required this.idProof,
     required this.rate,
     required this.status,
     required this.rating,
@@ -54,6 +56,10 @@ class PropertyModel {
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) => PropertyModel(
         id: json["id"],
+        propertyImages:
+            List<String>.from(json["property_images"].map((x) => x)),
+        profilePicture: json["profile_picture"],
+        idProof: json["id_proof"],
         name: json["name"],
         email: json["email"],
         phoneNumber: json["phone_number"],
@@ -65,8 +71,6 @@ class PropertyModel {
         longitude: json["longitude"],
         description: json["description"],
         amenities: json["amenities"],
-        profilePicture: json["profile_picture"],
-        idProof: json["id_proof"],
         rate: json["rate"],
         status: json["status"],
         rating: json["rating"],
@@ -75,6 +79,9 @@ class PropertyModel {
 
   Map<String, dynamic> toJson() => {
         "id": id,
+        "property_images": List<dynamic>.from(propertyImages.map((x) => x)),
+        "profile_picture": profilePicture,
+        "id_proof": idProof,
         "name": name,
         "email": email,
         "phone_number": phoneNumber,
@@ -86,8 +93,6 @@ class PropertyModel {
         "longitude": longitude,
         "description": description,
         "amenities": amenities,
-        "profile_picture": profilePicture,
-        "id_proof": idProof,
         "rate": rate,
         "status": status,
         "rating": rating,
