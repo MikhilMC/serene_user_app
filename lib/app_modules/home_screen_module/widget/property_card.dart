@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/models/property.dart';
+import 'package:serene_user_app/app_constants/app_urls.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/models/property_list_model/property_model.dart';
 import 'package:serene_user_app/app_modules/property_details_module/view/property_details_screen.dart';
 
 class PropertyCard extends StatelessWidget {
-  final Property property;
+  final PropertyModel property;
 
   const PropertyCard({super.key, required this.property});
 
@@ -28,7 +29,7 @@ class PropertyCard extends StatelessWidget {
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(12.0)),
               child: Image.network(
-                property.imageUrl,
+                "${AppUrls.baseUrl}${property.profilePicture}",
                 height: 150,
                 fit: BoxFit.cover,
               ),
@@ -56,7 +57,7 @@ class PropertyCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8.0),
                       Text(
-                        '(${property.reviews} reviews)',
+                        '(${property.reviewCount} reviews)',
                         style:
                             const TextStyle(fontSize: 14, color: Colors.grey),
                       ),
@@ -64,7 +65,7 @@ class PropertyCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   Text(
-                    '₹${property.dailyRate} per night',
+                    '₹${property.rate} per night',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

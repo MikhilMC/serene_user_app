@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_constants/app_urls.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc/user_profile_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/widget/profile_item.dart';
+import 'package:serene_user_app/app_widgets/custom_error_widget.dart';
 
 class ProfileWidget extends StatefulWidget {
   const ProfileWidget({super.key});
@@ -27,7 +28,9 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     return BlocBuilder<UserProfileBloc, UserProfileState>(
       builder: (context, state) {
         if (state is UserProfileError) {
-          return ErrorWidget(state.errorMessage);
+          return CustomErrorWidget(
+            errorMessage: state.errorMessage,
+          );
         }
 
         if (state is! UserProfileSuccess) {

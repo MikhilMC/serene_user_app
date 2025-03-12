@@ -9,7 +9,7 @@ part 'user_profile_bloc.freezed.dart';
 
 class UserProfileBloc extends Bloc<UserProfileEvent, UserProfileState> {
   UserProfileBloc() : super(_Initial()) {
-    on<UserProfileEvent>((event, emit) async {
+    on<_userProfileFetched>((event, emit) async {
       emit(UserProfileState.loading());
       try {
         final userProfile = await getProfileData();

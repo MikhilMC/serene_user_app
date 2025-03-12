@@ -1,9 +1,10 @@
-import 'dart:math';
-
-import 'package:faker/faker.dart' as faker;
 import 'package:flutter/material.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/models/property.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:serene_user_app/app_constants/app_colors.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/bloc/property_list_bloc/property_list_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/widget/property_card.dart';
+import 'package:serene_user_app/app_utils/app_helper.dart';
+import 'package:serene_user_app/app_widgets/empty_list.dart';
 import 'package:serene_user_app/app_widgets/normal_text_field.dart';
 
 class ExploreWidget extends StatefulWidget {
@@ -19,7 +20,7 @@ class _ExploreWidgetState extends State<ExploreWidget> {
   final _formKey = GlobalKey<FormState>();
   final _placeController = TextEditingController();
   String? _selectedPropertyType;
-  List<Property> _properties = [];
+  bool _isLoaded = false;
 
   final List<String> _propertyTypes = [
     'Apartment',
@@ -49,20 +50,32 @@ class _ExploreWidgetState extends State<ExploreWidget> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Generate random properties
-      final random = Random();
-      setState(() {
-        _properties = List.generate(
-          10,
-          (index) => Property(
-            name: faker.Faker().lorem.words(3).join(' '),
-            imageUrl: 'https://picsum.photos/300/200?random=$index',
-            rating: (random.nextDouble() * 5).toStringAsFixed(1),
-            reviews: random.nextInt(1000), // Convert to double
-            dailyRate:
-                (1000 + random.nextInt(5000)).toDouble(), // Convert to double
-          ),
+      if (_selectedPropertyType != null) {
+        context.read<PropertyListBloc>().add(
+              PropertyListEvent.propertyListFetched(
+                place: _placeController.text.trim(),
+                propertyType: _selectedPropertyType ?? "",
+              ),
+            );
+        setState(() {
+          _isLoaded = true;
+        });
+      } else {
+        AppHelper.showErrorDialogue(
+          context,
+          "Please select the property type",
         );
+        setState(() {
+          _isLoaded = false;
+        });
+      }
+    } else {
+      AppHelper.showErrorDialogue(
+        context,
+        "Please enter the place name",
+      );
+      setState(() {
+        _isLoaded = false;
       });
     }
   }
@@ -126,11 +139,35 @@ class _ExploreWidgetState extends State<ExploreWidget> {
             ),
           ),
           const SizedBox(height: 24.0),
-          if (_properties.isNotEmpty)
-            Column(
-              children: _properties
-                  .map((property) => PropertyCard(property: property))
-                  .toList(),
+          if (_isLoaded)
+            BlocBuilder<PropertyListBloc, PropertyListState>(
+              builder: (context, state) {
+                if (state is PropertyListError) {
+                  return ErrorWidget(state.errorMessage);
+                }
+
+                if (state is PropertyListEmpty) {
+                  return EmptyList(
+                    message: "Sorry, no property available",
+                  );
+                }
+
+                if (state is! PropertyListSuccess) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.firstColor,
+                    ),
+                  );
+                }
+
+                final properties = state.properties;
+
+                return Column(
+                  children: properties
+                      .map((property) => PropertyCard(property: property))
+                      .toList(),
+                );
+              },
             ),
         ],
       ),

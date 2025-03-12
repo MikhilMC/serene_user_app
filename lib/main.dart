@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/bloc/property_list_bloc/property_list_bloc.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc/user_profile_bloc.dart';
 import 'package:serene_user_app/app_modules/introduction_screen_module/view/introduction_screen.dart';
 import 'package:serene_user_app/app_modules/login_module/bloc/login_bloc.dart';
 import 'package:serene_user_app/app_modules/register_module/bloc/user_register_bloc.dart';
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => UserProfileBloc(),
+        ),
+        BlocProvider(
+          create: (context) => PropertyListBloc(),
         ),
       ],
       child: MaterialApp(
