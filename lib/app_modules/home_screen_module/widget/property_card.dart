@@ -3,7 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_constants/app_urls.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/models/property_model/property_model.dart';
+import 'package:serene_user_app/app_models/property_model/property_model.dart';
 import 'package:serene_user_app/app_modules/property_details_module/view/property_details_screen.dart';
 
 class PropertyCard extends StatefulWidget {
@@ -24,7 +24,9 @@ class _PropertyCardState extends State<PropertyCard> {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => PropertyDetailsScreen(),
+          builder: (context) => PropertyDetailsScreen(
+            propertyId: widget.property.id,
+          ),
         ),
       ),
       child: Card(
@@ -106,8 +108,9 @@ class _PropertyCardState extends State<PropertyCard> {
                       // Profile Picture as Circular Avatar
                       CircleAvatar(
                         radius: 25,
-                        backgroundImage: NetworkImage(
-                            "${AppUrls.baseUrl}${widget.property.profilePicture}"),
+                        backgroundImage: CachedNetworkImageProvider(
+                          "${AppUrls.baseUrl}${widget.property.profilePicture}",
+                        ),
                       ),
                       const SizedBox(width: 12),
                       // Property Name

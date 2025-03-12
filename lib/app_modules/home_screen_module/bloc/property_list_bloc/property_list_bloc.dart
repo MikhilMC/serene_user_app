@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/models/property_model/property_model.dart';
+import 'package:serene_user_app/app_models/property_model/property_model.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/service/get_property_list.dart';
 
 part 'property_list_event.dart';

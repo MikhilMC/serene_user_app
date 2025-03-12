@@ -6,20 +6,16 @@ import 'package:http/http.dart' as http;
 import 'package:serene_user_app/app_constants/app_urls.dart';
 import 'package:serene_user_app/app_models/property_model/property_model.dart';
 
-Future<List<PropertyModel>> getPropertyList({
-  required String place,
-  required String propertyType,
+Future<PropertyModel> getPropertyDetails({
+  required int propertyId,
 }) async {
   try {
     Map<String, dynamic> params = {
-      "location": place,
-      "property_type": propertyType,
+      "id": propertyId.toString(),
     };
 
-    // Construct the URL with query parameters
-    final url = Uri.parse(AppUrls.getPropertyListUrl).replace(
-      queryParameters: params,
-    );
+    final url = Uri.parse(AppUrls.getPropertyDetailsUrl)
+        .replace(queryParameters: params);
 
     final resp = await http.get(
       url,
@@ -29,13 +25,15 @@ Future<List<PropertyModel>> getPropertyList({
     );
 
     if (resp.statusCode == 200) {
-      final List<dynamic> decoded = jsonDecode(resp.body);
-      final response =
-          decoded.map((item) => PropertyModel.fromJson(item)).toList();
+      final dynamic decoded = jsonDecode(resp.body);
+      final response = PropertyModel.fromJson(decoded);
 
       return response;
     } else {
-      throw Exception('Failed to load response');
+      final Map<String, dynamic> errorResponse = jsonDecode(resp.body);
+      throw Exception(
+        '${errorResponse['message'] ?? 'Unknown error'}',
+      );
     }
   } on SocketException {
     throw Exception('Server error');
