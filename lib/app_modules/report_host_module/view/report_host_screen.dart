@@ -83,7 +83,7 @@ class _ReportHostScreenState extends State<ReportHostScreen> {
       appBar: AppBar(
         title: const Text('Report Host'),
         centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+        // backgroundColor: Colors.deepPurple,
       ),
       body: SafeArea(
         child: Padding(
