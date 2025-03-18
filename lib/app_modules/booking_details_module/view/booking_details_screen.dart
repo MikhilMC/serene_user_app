@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:serene_user_app/app_modules/report_host_module/view/report_host_screen.dart';
 import 'package:url_launcher/url_launcher.dart'; // For launching URLs (email, phone, SMS, WhatsApp)
 
 import 'package:serene_user_app/app_modules/booking_details_module/utils/helper.dart';
@@ -368,6 +369,20 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => BookingReviewScreen(),
+                ),
+              ),
+            ),
+            // 🔥 New Report Host Button
+            ActionButton(
+              text: "Report Host",
+              icon: Icons.report,
+              color: Colors.redAccent,
+              action: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReportHostScreen(
+                    bookingId: int.parse(bookingId), // Passing booking ID
+                  ),
                 ),
               ),
             ),
