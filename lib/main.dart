@@ -5,6 +5,7 @@ import 'package:serene_user_app/app_modules/home_screen_module/bloc/property_lis
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc/user_profile_bloc.dart';
 import 'package:serene_user_app/app_modules/introduction_screen_module/view/introduction_screen.dart';
 import 'package:serene_user_app/app_modules/login_module/bloc/login_bloc.dart';
+import 'package:serene_user_app/app_modules/property_details_module/bloc/host_events_bloc/host_events_bloc.dart';
 import 'package:serene_user_app/app_modules/property_details_module/bloc/property_details_bloc/property_details_bloc.dart';
 import 'package:serene_user_app/app_modules/register_module/bloc/user_register_bloc.dart';
 
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => PropertyDetailsBloc(),
+        ),
+        BlocProvider(
+          create: (context) => HostEventsBloc(),
         ),
       ],
       child: MaterialApp(

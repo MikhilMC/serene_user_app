@@ -142,8 +142,10 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                 const SizedBox(height: 24.0),
 
                 // Events Section
-                // EventsSectionWidget(event: widget.event),
-                // const SizedBox(height: 24.0),
+                EventsSectionWidget(
+                  hostId: widget.propertyId,
+                ),
+                const SizedBox(height: 24.0),
 
                 // Reviews Section
                 // ReviewSectionWidget(reviews: widget.reviews),

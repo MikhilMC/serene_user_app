@@ -8,4 +8,5 @@ class AppUrls {
   static const String getProfileDataUrl = "$userAppUrl/profile/";
   static const String getPropertyListUrl = "$userAppUrl/list_host/";
   static const String getPropertyDetailsUrl = "$userAppUrl/view_host_deatails/";
+  static const String getEventsUrl = "$userAppUrl/view_events/";
 }
