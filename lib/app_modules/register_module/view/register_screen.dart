@@ -295,6 +295,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     _birthDate = value;
                                   });
                                 },
+                                validator: (value) {
+                                  if (value == null) {
+                                    return "Please add your birthdate.";
+                                  }
+
+                                  return null;
+                                },
                                 firstDate: DateTime(1950),
                                 lastDate: DateTime.now(),
                               ),

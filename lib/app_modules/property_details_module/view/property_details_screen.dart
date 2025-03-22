@@ -61,6 +61,9 @@ class PropertyDetailsScreen extends StatefulWidget {
 }
 
 class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
+  String? _hostName; // Store host name
+  double? _rate; // Store rate
+
   @override
   void initState() {
     super.initState();
@@ -72,16 +75,17 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   }
 
   void _bookProperty() {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => BookingScreen(
-    //       hostName: widget.host['name']!,
-    //       rate: widget.property['dailyRate']! as double,
-    //       isUpdateBooking: false,
-    //     ),
-    //   ),
-    // );
+    if (_hostName != null && _rate != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BookingScreen(
+            hostName: _hostName!,
+            rate: _rate!,
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -90,7 +94,16 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       appBar: AppBar(
         title: const Text('Property Details'),
       ),
-      body: BlocBuilder<PropertyDetailsBloc, PropertyDetailsState>(
+      body: BlocConsumer<PropertyDetailsBloc, PropertyDetailsState>(
+        listener: (context, state) {
+          if (state is PropertyDetailsSuccess) {
+            // Update host name and rate when success state is received
+            setState(() {
+              _hostName = state.propertyDetails.name;
+              _rate = double.parse(state.propertyDetails.rate);
+            });
+          }
+        },
         builder: (context, state) {
           if (state is PropertyDetailsError) {
             return CustomErrorWidget(

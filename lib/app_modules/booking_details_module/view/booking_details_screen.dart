@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:serene_user_app/app_modules/report_host_module/view/report_host_screen.dart';
 import 'package:url_launcher/url_launcher.dart'; // For launching URLs (email, phone, SMS, WhatsApp)
 
 import 'package:serene_user_app/app_modules/booking_details_module/utils/helper.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/widget/action_button.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/widget/detail_row.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/widget/section_title.dart';
-import 'package:serene_user_app/app_modules/booking_module/view/booking_screen.dart';
+import 'package:serene_user_app/app_modules/booking_module/view/booking_update_screen.dart';
 import 'package:serene_user_app/app_modules/booking_review_module/view/booking_review_screen.dart';
+import 'package:serene_user_app/app_modules/report_host_module/view/report_host_screen.dart';
 
 class BookingDetailsScreen extends StatefulWidget {
   const BookingDetailsScreen({super.key});
@@ -336,10 +336,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => BookingScreen(
+                    builder: (context) => BookingUpdateScreen(
                       hostName: hostName,
                       rate: totalCost / numberOfGuests,
-                      isUpdateBooking: true,
                       bookingId: 1,
                       numberOfPersons: numberOfGuests,
                       startingDate: DateTime.parse(checkInDate),
