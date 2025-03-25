@@ -35,7 +35,7 @@ class BookingDetailsCard extends StatelessWidget {
 
             // Rate per Day per Person
             BookingDetailRow(
-              label: "Rate per Day (per person)",
+              label: "Rate per day (For one person)",
               value: '₹${rate.toStringAsFixed(2)}',
             ),
             const Divider(),

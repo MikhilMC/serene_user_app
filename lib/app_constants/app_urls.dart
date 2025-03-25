@@ -9,4 +9,7 @@ class AppUrls {
   static const String getPropertyListUrl = "$userAppUrl/list_host/";
   static const String getPropertyDetailsUrl = "$userAppUrl/view_host_deatails/";
   static const String getEventsUrl = "$userAppUrl/view_events/";
+
+  static const String addBookingUrl = "$userAppUrl/bookings/";
+  static const String makePaymentUrl = "$userAppUrl/payment/";
 }

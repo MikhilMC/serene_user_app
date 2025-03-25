@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
+import 'package:serene_user_app/app_modules/booking_module/bloc/add_booking_bloc/add_booking_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/property_list_bloc/property_list_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc/user_profile_bloc.dart';
 import 'package:serene_user_app/app_modules/introduction_screen_module/view/introduction_screen.dart';
 import 'package:serene_user_app/app_modules/login_module/bloc/login_bloc.dart';
+import 'package:serene_user_app/app_modules/payment_module/bloc/make_payment_bloc.dart';
 import 'package:serene_user_app/app_modules/property_details_module/bloc/host_events_bloc/host_events_bloc.dart';
 import 'package:serene_user_app/app_modules/property_details_module/bloc/property_details_bloc/property_details_bloc.dart';
 import 'package:serene_user_app/app_modules/register_module/bloc/user_register_bloc.dart';
@@ -15,6 +17,10 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  // Add a global navigator key
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +44,17 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => HostEventsBloc(),
         ),
+        BlocProvider(
+          create: (context) => AddBookingBloc(),
+        ),
+        BlocProvider(
+          create: (context) => MakePaymentBloc(),
+        ),
       ],
       child: MaterialApp(
         title: 'Serene',
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
             seedColor: AppColors.firstColor,

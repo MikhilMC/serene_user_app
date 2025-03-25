@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:serene_user_app/app_utils/app_helper.dart';
 
 class SelectDateField extends StatefulWidget {
   final DateTime? value;
@@ -40,10 +41,9 @@ class _SelectDateFieldState extends State<SelectDateField> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Error: ${e.toString()}"),
-          ),
+        AppHelper.showErrorDialogue(
+          context,
+          "Error: ${e.toString()}",
         );
       }
     }

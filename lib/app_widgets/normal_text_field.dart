@@ -9,6 +9,7 @@ class NormalTextField extends StatelessWidget {
   final Icon? textFieldIcon;
   final TextInputType? textInputType;
   final bool? isDisabled;
+  final Function(String?)? onChange;
   const NormalTextField({
     super.key,
     required this.textEditingController,
@@ -18,6 +19,7 @@ class NormalTextField extends StatelessWidget {
     this.textFieldIcon,
     this.textInputType,
     this.isDisabled,
+    this.onChange,
   });
 
   @override
@@ -32,6 +34,7 @@ class NormalTextField extends StatelessWidget {
         prefixIcon: textFieldIcon,
         border: OutlineInputBorder(),
       ),
+      onChanged: onChange,
       keyboardType: textInputType ?? TextInputType.text,
       readOnly: isDisabled ?? false,
     );

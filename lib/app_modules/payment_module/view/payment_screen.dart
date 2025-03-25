@@ -9,10 +9,12 @@ import 'package:serene_user_app/app_modules/payment_module/widget/google_pay.dar
 import 'package:serene_user_app/app_widgets/custom_button.dart';
 
 class PaymentScreen extends StatefulWidget {
+  final int bookingId;
   final double amount;
   final double platformFee;
   const PaymentScreen({
     super.key,
+    required this.bookingId,
     required this.amount,
     required this.platformFee,
   });
@@ -62,15 +64,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
         switch (selectedBank) {
           case "Cash on Arrival":
             return CashOnArrival(
-              amount: widget.amount,
+              bookingId: widget.bookingId,
+              amount: widget.amount + widget.platformFee,
             );
           case "Google Pay":
             return GooglePay(
-              amount: widget.amount,
+              bookingId: widget.bookingId,
+              amount: widget.amount + widget.platformFee,
             );
           default:
             return CardPayment(
-              amount: widget.amount,
+              bookingId: widget.bookingId,
+              amount: widget.amount + widget.platformFee,
             );
         }
       },

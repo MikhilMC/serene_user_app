@@ -95,6 +95,7 @@ class _BookingUpdateScreenState extends State<BookingUpdateScreen> {
           context,
           MaterialPageRoute(
             builder: (context) => PaymentScreen(
+              bookingId: widget.bookingId,
               amount: currentRate,
               platformFee: currentRate * 0.1,
             ),

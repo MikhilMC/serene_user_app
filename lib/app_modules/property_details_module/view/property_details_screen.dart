@@ -80,6 +80,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => BookingScreen(
+            hostId: widget.propertyId,
             hostName: _hostName!,
             rate: _rate!,
           ),
