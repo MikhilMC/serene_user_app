@@ -31,6 +31,8 @@ class PropertyModel {
   String status;
   String rating;
   int reviewCount;
+  int maxCapacity;
+  int rooms;
 
   PropertyModel({
     required this.id,
@@ -52,6 +54,8 @@ class PropertyModel {
     required this.status,
     required this.rating,
     required this.reviewCount,
+    required this.maxCapacity,
+    required this.rooms,
   });
 
   factory PropertyModel.fromJson(Map<String, dynamic> json) => PropertyModel(
@@ -75,6 +79,8 @@ class PropertyModel {
         status: json["status"],
         rating: json["rating"],
         reviewCount: json["review_count"],
+        maxCapacity: json["max_capacity"],
+        rooms: json["rooms"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -97,5 +103,7 @@ class PropertyModel {
         "status": status,
         "rating": rating,
         "review_count": reviewCount,
+        "max_capacity": maxCapacity,
+        "rooms": rooms,
       };
 }

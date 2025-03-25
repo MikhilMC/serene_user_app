@@ -9,7 +9,7 @@ import 'package:serene_user_app/app_modules/property_details_module/bloc/propert
 import 'package:serene_user_app/app_modules/property_details_module/widgets/events_section_widget.dart';
 import 'package:serene_user_app/app_modules/property_details_module/widgets/host_details_widget.dart';
 import 'package:serene_user_app/app_modules/property_details_module/widgets/property_details_widget.dart';
-import 'package:serene_user_app/app_modules/property_details_module/widgets/review_section_widget.dart';
+// import 'package:serene_user_app/app_modules/property_details_module/widgets/review_section_widget.dart';
 import 'package:serene_user_app/app_widgets/custom_button.dart';
 import 'package:serene_user_app/app_widgets/custom_error_widget.dart';
 
@@ -139,6 +139,10 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                 .map((image) => "${AppUrls.baseUrl}$image")
                 .toList(),
             'dailyRate': double.parse(propertyDetails.rate),
+            'averageRating': double.parse(propertyDetails.rating),
+            'reviewCount': propertyDetails.reviewCount,
+            'maxCapacity': propertyDetails.maxCapacity,
+            'numberOfRooms': propertyDetails.rooms,
           };
 
           return SingleChildScrollView(

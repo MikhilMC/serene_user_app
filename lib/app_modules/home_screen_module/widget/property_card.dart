@@ -64,10 +64,10 @@ class _PropertyCardState extends State<PropertyCard> {
                           value: progress.progress,
                           valueColor: AlwaysStoppedAnimation<Color>(
                             AppColors.firstColor,
-                          ), // Fixed: Use AlwaysStoppedAnimation
-                        ), // Loading placeholder
+                          ),
+                        ),
                         errorWidget: (context, url, error) =>
-                            const Icon(Icons.error), // Error placeholder
+                            const Icon(Icons.error),
                       ),
                     );
                   }).toList(),
@@ -103,9 +103,9 @@ class _PropertyCardState extends State<PropertyCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Profile and Property Name
                   Row(
                     children: [
-                      // Profile Picture as Circular Avatar
                       CircleAvatar(
                         radius: 25,
                         backgroundImage: CachedNetworkImageProvider(
@@ -113,7 +113,6 @@ class _PropertyCardState extends State<PropertyCard> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // Property Name
                       Expanded(
                         child: Text(
                           widget.property.name,
@@ -127,6 +126,8 @@ class _PropertyCardState extends State<PropertyCard> {
                     ],
                   ),
                   const SizedBox(height: 8.0),
+
+                  // Rating and Reviews
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 16),
@@ -138,12 +139,16 @@ class _PropertyCardState extends State<PropertyCard> {
                       const SizedBox(width: 8.0),
                       Text(
                         '(${widget.property.reviewCount} reviews)',
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.grey),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 8.0),
+
+                  // Rate
                   Text(
                     '₹${widget.property.rate} per night',
                     style: const TextStyle(
@@ -151,6 +156,41 @@ class _PropertyCardState extends State<PropertyCard> {
                       fontWeight: FontWeight.bold,
                       color: Colors.green,
                     ),
+                  ),
+                  const SizedBox(height: 8.0),
+
+                  // Max Capacity and Rooms
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      SizedBox(
+                        child: Row(
+                          children: [
+                            const Icon(Icons.people,
+                                color: Colors.blue, size: 18),
+                            const SizedBox(width: 6.0),
+                            Text(
+                              '${widget.property.maxCapacity} Guests',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 12.0),
+                            const Icon(Icons.bed,
+                                color: Colors.deepOrange, size: 18),
+                            const SizedBox(width: 6.0),
+                            Text(
+                              '${widget.property.rooms} Rooms',
+                              style: const TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
