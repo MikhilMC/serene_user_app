@@ -15,4 +15,5 @@ class AppUrls {
   static const String makePaymentUrl = "$userAppUrl/payment/";
 
   static const String getBookingDetailsUrl = "$userAppUrl/booking_details/";
+  static const String cancelBookingUrl = "$userAppUrl/cancel_booking/";
 }
