@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
+import 'package:serene_user_app/app_modules/booking_details_module/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:serene_user_app/app_modules/booking_module/bloc/add_booking_bloc/add_booking_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/property_list_bloc/property_list_bloc.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_bookings_bloc/user_bookings_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc/user_profile_bloc.dart';
 import 'package:serene_user_app/app_modules/introduction_screen_module/view/introduction_screen.dart';
 import 'package:serene_user_app/app_modules/login_module/bloc/login_bloc.dart';
@@ -50,6 +52,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => MakePaymentBloc(),
         ),
+        BlocProvider(
+          create: (context) => UserBookingsBloc(),
+        ),
+        BlocProvider(
+          create: (context) => BookingDetailsBloc(),
+        )
       ],
       child: MaterialApp(
         title: 'Serene',

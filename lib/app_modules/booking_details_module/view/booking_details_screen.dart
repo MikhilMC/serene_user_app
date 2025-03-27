@@ -1,5 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:serene_user_app/app_constants/app_colors.dart';
+import 'package:serene_user_app/app_modules/booking_details_module/bloc/booking_details_bloc/booking_details_bloc.dart';
+import 'package:serene_user_app/app_widgets/custom_error_widget.dart';
 import 'package:url_launcher/url_launcher.dart'; // For launching URLs (email, phone, SMS, WhatsApp)
 
 import 'package:serene_user_app/app_modules/booking_details_module/utils/helper.dart';
@@ -11,7 +16,11 @@ import 'package:serene_user_app/app_modules/booking_review_module/view/booking_r
 import 'package:serene_user_app/app_modules/report_host_module/view/report_host_screen.dart';
 
 class BookingDetailsScreen extends StatefulWidget {
-  const BookingDetailsScreen({super.key});
+  final int bookingId;
+  const BookingDetailsScreen({
+    super.key,
+    required this.bookingId,
+  });
 
   @override
   State<BookingDetailsScreen> createState() => _BookingDetailsScreenState();
@@ -38,6 +47,14 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
   // Host contact details (hardcoded for demonstration)
   final String hostEmail = "john.doe@example.com";
   final String hostPhoneNumber = "+1234567890";
+
+  @override
+  void initState() {
+    super.initState();
+    context
+        .read<BookingDetailsBloc>()
+        .add(BookingDetailsEvent.bookingDetailsFetched(widget.bookingId));
+  }
 
   Future<void> _showBookingCancelDialogueBox() async {
     if (mounted) {
@@ -234,159 +251,169 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
         title: Text("Booking Details"),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Booking Overview
-            SectionTitle(title: "Booking Overview"),
-            DetailRow(
-              label: "Booking ID",
-              value: bookingId,
-            ),
-            DetailRow(
-              label: "Status",
-              value: bookingStatus,
-              valueColor: Helper.statusColor(bookingStatus),
-            ),
-            DetailRow(
-              label: "Booking Date",
-              value: dateFormat.format(DateTime.parse(bookingDate)),
-            ),
+      body: BlocBuilder<BookingDetailsBloc, BookingDetailsState>(
+        builder: (context, state) {
+          if (state is BookingDetailsError) {
+            return CustomErrorWidget(
+              errorMessage: state.errorMessage,
+            );
+          }
 
-            SizedBox(height: 20),
+          if (state is! BookingDetailsSuccess) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: AppColors.firstColor,
+              ),
+            );
+          }
 
-            // Property Details
-            SectionTitle(title: "Property Details"),
-            DetailRow(
-              label: "Property Name",
-              value: propertyName,
-            ),
-            DetailRow(
-              label: "Address",
-              value: propertyAddress,
-            ),
-            DetailRow(
-              label: "Host",
-              value: hostName,
-            ),
+          final bookingDetails = state.bookingDetails;
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Booking Overview
+                SectionTitle(title: "Booking Overview"),
+                DetailRow(
+                  label: "Booking ID",
+                  value: bookingDetails.id.toString(),
+                ),
+                DetailRow(
+                  label: "Status",
+                  value: bookingDetails.bookingStatus,
+                  valueColor: Helper.statusColor(bookingStatus),
+                ),
+                DetailRow(
+                  label: "Booking Date",
+                  value: dateFormat.format(bookingDetails.bookingDate),
+                ),
 
-            SizedBox(height: 20),
+                SizedBox(height: 20),
 
-            // Stay Details
-            SectionTitle(title: "Stay Details"),
-            DetailRow(
-              label: "Check-in Date",
-              value: dateFormat.format(DateTime.parse(checkInDate)),
-            ),
-            DetailRow(
-              label: "Check-out Date",
-              value: dateFormat.format(DateTime.parse(checkOutDate)),
-            ),
-            DetailRow(
-              label: "Number of Nights",
-              value: numberOfNights.toString(),
-            ),
-            DetailRow(
-              label: "Number of Guests",
-              value: numberOfGuests.toString(),
-            ),
+                // Property Details
+                SectionTitle(title: "Property Details"),
+                DetailRow(
+                  label: "Property Name",
+                  value: bookingDetails.propertyName.isNotEmpty
+                      ? bookingDetails.propertyName
+                      : "Property name unavailable",
+                ),
+                DetailRow(
+                  label: "Address",
+                  value: propertyAddress,
+                ),
+                DetailRow(
+                  label: "Host",
+                  value: bookingDetails.hostName,
+                ),
 
-            SizedBox(height: 20),
+                SizedBox(height: 20),
 
-            // Payment Details
-            SectionTitle(title: "Payment Details"),
-            DetailRow(
-              label: "Total Cost",
-              value: "\$${totalCost.toStringAsFixed(2)}",
-            ),
-            DetailRow(
-              label: "Payment Method",
-              value: paymentMethod,
-            ),
-            DetailRow(
-              label: "Payment Status",
-              value: paymentStatus,
-              valueColor: Helper.statusColor(paymentStatus),
-            ),
+                // Stay Details
+                SectionTitle(title: "Stay Details"),
+                DetailRow(
+                  label: "Check-in Date",
+                  value: dateFormat.format(bookingDetails.startDate),
+                ),
+                DetailRow(
+                  label: "Check-out Date",
+                  value: dateFormat.format(bookingDetails.endDate),
+                ),
+                DetailRow(
+                  label: "Number of Nights",
+                  value: bookingDetails.noOfDays.toString(),
+                ),
+                DetailRow(
+                  label: "Number of Guests",
+                  value: bookingDetails.noOfGuests.toString(),
+                ),
 
-            SizedBox(height: 20),
+                SizedBox(height: 20),
 
-            // Guest Details
-            SectionTitle(title: "Guest Details"),
-            DetailRow(
-              label: "Guest Name",
-              value: guestName,
-            ),
-            DetailRow(
-              label: "Special Requests",
-              value: specialRequests,
-            ),
+                // Payment Details
+                SectionTitle(title: "Payment Details"),
+                DetailRow(
+                  label: "Total Cost",
+                  value:
+                      "\$${(double.parse(bookingDetails.totalCost) + double.parse(bookingDetails.platformFee)) - double.parse(bookingDetails.refundAmount)}",
+                ),
+                DetailRow(
+                  label: "Payment Method",
+                  value: bookingDetails.paymentMethod,
+                ),
+                DetailRow(
+                  label: "Payment Status",
+                  value: paymentStatus,
+                  valueColor: Helper.statusColor(bookingDetails.paymentStatus),
+                ),
 
-            SizedBox(height: 20),
+                SizedBox(height: 20),
 
-            // Actions
-            SectionTitle(title: "Actions"),
-            ActionButton(
-              text: "Modify Booking",
-              icon: Icons.edit,
-              color: Colors.blue,
-              action: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BookingUpdateScreen(
-                      hostName: hostName,
-                      rate: totalCost / numberOfGuests,
-                      bookingId: 1,
-                      numberOfPersons: numberOfGuests,
-                      startingDate: DateTime.parse(checkInDate),
-                      endingDate: DateTime.parse(checkOutDate),
+                // Actions
+                SectionTitle(title: "Actions"),
+                ActionButton(
+                  text: "Modify Booking",
+                  icon: Icons.edit,
+                  color: Colors.blue,
+                  action: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BookingUpdateScreen(
+                          hostName: bookingDetails.hostName,
+                          rate: double.parse(bookingDetails.totalCost) /
+                              bookingDetails.noOfGuests,
+                          bookingId: bookingDetails.id,
+                          numberOfPersons: bookingDetails.noOfGuests,
+                          startingDate: bookingDetails.startDate,
+                          endingDate: bookingDetails.endDate,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                ActionButton(
+                  text: "Cancel Booking",
+                  icon: Icons.cancel,
+                  color: Colors.red,
+                  action: _showBookingCancelDialogueBox,
+                ),
+                ActionButton(
+                  text: "Contact Host",
+                  icon: Icons.message,
+                  color: Colors.green,
+                  action: _showContactHostModal, // Updated to show the modal
+                ),
+                ActionButton(
+                  text: "Leave a Review",
+                  icon: Icons.star,
+                  color: Colors.orange,
+                  action: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BookingReviewScreen(),
                     ),
                   ),
-                );
-              },
-            ),
-            ActionButton(
-              text: "Cancel Booking",
-              icon: Icons.cancel,
-              color: Colors.red,
-              action: _showBookingCancelDialogueBox,
-            ),
-            ActionButton(
-              text: "Contact Host",
-              icon: Icons.message,
-              color: Colors.green,
-              action: _showContactHostModal, // Updated to show the modal
-            ),
-            ActionButton(
-              text: "Leave a Review",
-              icon: Icons.star,
-              color: Colors.orange,
-              action: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BookingReviewScreen(),
                 ),
-              ),
-            ),
-            // 🔥 New Report Host Button
-            ActionButton(
-              text: "Report Host",
-              icon: Icons.report,
-              color: Colors.redAccent,
-              action: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ReportHostScreen(
-                    bookingId: int.parse(bookingId), // Passing booking ID
+                // 🔥 New Report Host Button
+                ActionButton(
+                  text: "Report Host",
+                  icon: Icons.report,
+                  color: Colors.redAccent,
+                  action: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReportHostScreen(
+                        bookingId: int.parse(bookingId), // Passing booking ID
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
