@@ -16,7 +16,7 @@ class BookingData {
   int noOfGuests;
   String totalCost;
   String refundAmount;
-  String paymentOption;
+  String paymentMethod;
   String paymentStatus;
   String bookingStatus;
   DateTime bookingDate;
@@ -33,7 +33,7 @@ class BookingData {
     required this.noOfGuests,
     required this.totalCost,
     required this.refundAmount,
-    required this.paymentOption,
+    required this.paymentMethod,
     required this.paymentStatus,
     required this.bookingStatus,
     required this.bookingDate,
@@ -51,7 +51,7 @@ class BookingData {
         noOfGuests: json["no_of_guests"],
         totalCost: json["total_cost"],
         refundAmount: json["refund_amount"],
-        paymentOption: json["payment_option"],
+        paymentMethod: json["payment_method"],
         paymentStatus: json["payment_status"],
         bookingStatus: json["booking_status"],
         bookingDate: DateTime.parse(json["booking_date"]),
@@ -71,7 +71,7 @@ class BookingData {
         "no_of_guests": noOfGuests,
         "total_cost": totalCost,
         "refund_amount": refundAmount,
-        "payment_option": paymentOption,
+        "payment_method": paymentMethod,
         "payment_status": paymentStatus,
         "booking_status": bookingStatus,
         "booking_date": bookingDate.toIso8601String(),

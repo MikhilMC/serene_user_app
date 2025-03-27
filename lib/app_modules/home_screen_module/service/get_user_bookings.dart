@@ -27,6 +27,8 @@ Future<List<UserBookingModel>> getUserBookings() async {
       final response =
           decoded.map((item) => UserBookingModel.fromJson(item)).toList();
 
+      response.sort((a, b) => b.startDate.compareTo(a.startDate));
+
       return response;
     } else {
       final Map<String, dynamic> errorResponse = jsonDecode(resp.body);

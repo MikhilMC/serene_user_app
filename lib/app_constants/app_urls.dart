@@ -16,4 +16,6 @@ class AppUrls {
 
   static const String getBookingDetailsUrl = "$userAppUrl/booking_details/";
   static const String cancelBookingUrl = "$userAppUrl/cancel_booking/";
+  static const String checkInUrl = "$userAppUrl/check_in/";
+  static const String checkOutUrl = "$userAppUrl/check_out/";
 }

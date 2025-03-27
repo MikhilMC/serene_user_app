@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/bloc/cancel_booking_bloc/cancel_booking_bloc.dart';
+import 'package:serene_user_app/app_modules/booking_details_module/bloc/check_in_bloc/check_in_bloc.dart';
+import 'package:serene_user_app/app_modules/booking_details_module/bloc/check_out_bloc/check_out_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/view/home_screen.dart';
 import 'package:serene_user_app/app_utils/app_helper.dart';
 import 'package:serene_user_app/app_widgets/custom_error_widget.dart';
@@ -115,6 +117,19 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
     cancelBookingBloc
         .add(CancelBookingEvent.bookingCancelled(widget.bookingId));
+  }
+
+  Future<void> _checkIn() async {
+    final CheckInBloc cancelBookingBloc = BlocProvider.of<CheckInBloc>(context);
+
+    cancelBookingBloc.add(CheckInEvent.checkedIn(widget.bookingId));
+  }
+
+  Future<void> _checkOut() async {
+    final CheckOutBloc cancelBookingBloc =
+        BlocProvider.of<CheckOutBloc>(context);
+
+    cancelBookingBloc.add(CheckOutEvent.checkedOut(widget.bookingId));
   }
 
   // Function to show the contact host modal
@@ -249,6 +264,21 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
     }
   }
 
+  String _formatBookingStatus(String bookingStatus) {
+    switch (bookingStatus) {
+      case "booking_initiated":
+        return "Booking Initiated";
+      case "booking_completed":
+        return "Booking Completed";
+      case "check_in":
+        return "Checked In";
+      case "check_out":
+        return "Checked Out";
+      default:
+        return "Canceled";
+    }
+  }
+
   String _formatPaymentMethod(String paymentMethod) {
     switch (paymentMethod) {
       case "cash_on_arrival":
@@ -286,7 +316,15 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
           }
 
           final bookingDetails = state.bookingDetails;
-          return BlocConsumer<CancelBookingBloc, CancelBookingState>(
+          final now = DateTime(
+            DateTime.now().year,
+            DateTime.now().month,
+            DateTime.now().day,
+          );
+          final startDate = bookingDetails.startDate;
+          final endDate = bookingDetails.endDate;
+
+          return BlocConsumer<CheckOutBloc, CheckOutState>(
             listener: (context, state) {
               state.whenOrNull(
                 loading: () {},
@@ -307,7 +345,7 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                   } else {
                     AppHelper.showErrorDialogue(
                       context,
-                      "Cancel Booking Failed",
+                      "Checking Out Failed",
                     );
                     Navigator.pop(context);
                   }
@@ -315,171 +353,298 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                 failure: (errorMessage) {
                   AppHelper.showErrorDialogue(
                     context,
-                    "Cancel Booking Failed: $errorMessage",
+                    "Checking Out Failed: $errorMessage",
                   );
                   Navigator.pop(context);
                 },
               );
             },
             builder: (context, state) {
-              bool isLoading = state.maybeWhen(
+              bool isCheckingOutLoading = state.maybeWhen(
                 loading: () => true,
                 orElse: () => false,
               );
+              return BlocConsumer<CheckInBloc, CheckInState>(
+                listener: (context, state) {
+                  state.whenOrNull(
+                    loading: () {},
+                    success: (response) {
+                      if (response.status == "success") {
+                        AppHelper.showCustomSnackBar(
+                          context,
+                          "Success: ${response.message}",
+                        );
 
-              return OverlayLoaderWidget(
-                isLoading: isLoading,
-                childWidget: SingleChildScrollView(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Booking Overview
-                      SectionTitle(title: "Booking Overview"),
-                      DetailRow(
-                        label: "Booking ID",
-                        value: bookingDetails.id.toString(),
-                      ),
-                      DetailRow(
-                        label: "Status",
-                        value: bookingDetails.bookingStatus,
-                        valueColor: Helper.statusColor(bookingStatus),
-                      ),
-                      DetailRow(
-                        label: "Booking Date",
-                        value: dateFormat.format(bookingDetails.bookingDate),
-                      ),
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => HomeScreen(),
+                          ),
+                        );
+                      } else {
+                        AppHelper.showErrorDialogue(
+                          context,
+                          "Checking In Failed",
+                        );
+                        Navigator.pop(context);
+                      }
+                    },
+                    failure: (errorMessage) {
+                      AppHelper.showErrorDialogue(
+                        context,
+                        "Checking In Failed: $errorMessage",
+                      );
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+                builder: (context, state) {
+                  bool isCheckingInLoading = state.maybeWhen(
+                    loading: () => true,
+                    orElse: () => false,
+                  );
 
-                      SizedBox(height: 20),
+                  return BlocConsumer<CancelBookingBloc, CancelBookingState>(
+                    listener: (context, state) {
+                      state.whenOrNull(
+                        loading: () {},
+                        success: (response) {
+                          if (response.status == "success") {
+                            AppHelper.showCustomSnackBar(
+                              context,
+                              "Success: ${response.message}",
+                            );
 
-                      // Property Details
-                      SectionTitle(title: "Property Details"),
-                      DetailRow(
-                        label: "Property Name",
-                        value: bookingDetails.propertyName.isNotEmpty
-                            ? bookingDetails.propertyName
-                            : "Property name unavailable",
-                      ),
-                      DetailRow(
-                        label: "Address",
-                        value: propertyAddress,
-                      ),
-                      DetailRow(
-                        label: "Host",
-                        value: bookingDetails.hostName,
-                      ),
-
-                      SizedBox(height: 20),
-
-                      // Stay Details
-                      SectionTitle(title: "Stay Details"),
-                      DetailRow(
-                        label: "Check-in Date",
-                        value: dateFormat.format(bookingDetails.startDate),
-                      ),
-                      DetailRow(
-                        label: "Check-out Date",
-                        value: dateFormat.format(bookingDetails.endDate),
-                      ),
-                      DetailRow(
-                        label: "Number of Nights",
-                        value: bookingDetails.noOfDays.toString(),
-                      ),
-                      DetailRow(
-                        label: "Number of Guests",
-                        value: bookingDetails.noOfGuests.toString(),
-                      ),
-
-                      SizedBox(height: 20),
-
-                      // Payment Details
-                      SectionTitle(title: "Payment Details"),
-                      DetailRow(
-                        label: "Total Cost",
-                        value:
-                            "₹${(double.parse(bookingDetails.totalCost) + double.parse(bookingDetails.platformFee)) - double.parse(bookingDetails.refundAmount)}",
-                      ),
-                      DetailRow(
-                        label: "Payment Method",
-                        value:
-                            _formatPaymentMethod(bookingDetails.paymentMethod),
-                      ),
-                      DetailRow(
-                        label: "Payment Status",
-                        value: paymentStatus,
-                        valueColor:
-                            Helper.statusColor(bookingDetails.paymentStatus),
-                      ),
-
-                      SizedBox(height: 20),
-
-                      // Actions
-                      SectionTitle(title: "Actions"),
-                      ActionButton(
-                        text: "Modify Booking",
-                        icon: Icons.edit,
-                        color: Colors.blue,
-                        action: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookingUpdateScreen(
-                                hostName: bookingDetails.hostName,
-                                rate: double.parse(bookingDetails.totalCost) /
-                                    bookingDetails.noOfGuests,
-                                bookingId: bookingDetails.id,
-                                numberOfPersons: bookingDetails.noOfGuests,
-                                startingDate: bookingDetails.startDate,
-                                endingDate: bookingDetails.endDate,
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(),
                               ),
-                            ),
-                          );
+                            );
+                          } else {
+                            AppHelper.showErrorDialogue(
+                              context,
+                              "Cancel Booking Failed",
+                            );
+                            Navigator.pop(context);
+                          }
                         },
-                      ),
-                      if (bookingDetails.bookingStatus == "booking_initiated" ||
-                          bookingDetails.bookingStatus == "booking_completed")
-                        ActionButton(
-                          text: "Cancel Booking",
-                          icon: Icons.cancel,
-                          color: Colors.red,
-                          action: _showBookingCancelDialogueBox,
-                        ),
-                      ActionButton(
-                        text: "Contact Host",
-                        icon: Icons.message,
-                        color: Colors.green,
-                        action:
-                            _showContactHostModal, // Updated to show the modal
-                      ),
-                      ActionButton(
-                        text: "Leave a Review",
-                        icon: Icons.star,
-                        color: Colors.orange,
-                        action: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BookingReviewScreen(),
+                        failure: (errorMessage) {
+                          AppHelper.showErrorDialogue(
+                            context,
+                            "Cancel Booking Failed: $errorMessage",
+                          );
+                          Navigator.pop(context);
+                        },
+                      );
+                    },
+                    builder: (context, state) {
+                      bool isCancelLoading = state.maybeWhen(
+                        loading: () => true,
+                        orElse: () => false,
+                      );
+
+                      return OverlayLoaderWidget(
+                        isLoading: isCancelLoading ||
+                            isCheckingInLoading ||
+                            isCheckingOutLoading,
+                        childWidget: SingleChildScrollView(
+                          padding: EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Booking Overview
+                              SectionTitle(title: "Booking Overview"),
+                              DetailRow(
+                                label: "Booking ID",
+                                value: bookingDetails.id.toString(),
+                              ),
+                              DetailRow(
+                                label: "Status",
+                                value: _formatBookingStatus(
+                                    bookingDetails.bookingStatus),
+                                valueColor: Helper.statusColor(bookingStatus),
+                              ),
+                              DetailRow(
+                                label: "Booking Date",
+                                value: dateFormat
+                                    .format(bookingDetails.bookingDate),
+                              ),
+
+                              SizedBox(height: 20),
+
+                              // Property Details
+                              SectionTitle(title: "Property Details"),
+                              DetailRow(
+                                label: "Property Name",
+                                value: bookingDetails.propertyName.isNotEmpty
+                                    ? bookingDetails.propertyName
+                                    : "Property name unavailable",
+                              ),
+                              DetailRow(
+                                label: "Address",
+                                value: propertyAddress,
+                              ),
+                              DetailRow(
+                                label: "Host",
+                                value: bookingDetails.hostName,
+                              ),
+
+                              SizedBox(height: 20),
+
+                              // Stay Details
+                              SectionTitle(title: "Stay Details"),
+                              DetailRow(
+                                label: "Check-in Date",
+                                value:
+                                    dateFormat.format(bookingDetails.startDate),
+                              ),
+                              DetailRow(
+                                label: "Check-out Date",
+                                value:
+                                    dateFormat.format(bookingDetails.endDate),
+                              ),
+                              DetailRow(
+                                label: "Number of Nights",
+                                value: bookingDetails.noOfDays.toString(),
+                              ),
+                              DetailRow(
+                                label: "Number of Guests",
+                                value: bookingDetails.noOfGuests.toString(),
+                              ),
+
+                              SizedBox(height: 20),
+
+                              // Payment Details
+                              SectionTitle(title: "Payment Details"),
+                              DetailRow(
+                                label: "Total Cost",
+                                value:
+                                    "₹${(double.parse(bookingDetails.totalCost) + double.parse(bookingDetails.platformFee)) - double.parse(bookingDetails.refundAmount)}",
+                              ),
+                              DetailRow(
+                                label: "Payment Method",
+                                value: _formatPaymentMethod(
+                                    bookingDetails.paymentMethod),
+                              ),
+                              DetailRow(
+                                label: "Payment Status",
+                                value: paymentStatus,
+                                valueColor: Helper.statusColor(
+                                    bookingDetails.paymentStatus),
+                              ),
+
+                              SizedBox(height: 20),
+
+                              // Actions
+                              SectionTitle(title: "Actions"),
+                              SizedBox(height: 8),
+
+                              // Check-In Button (on or after start date but before end date)
+                              if ((now.year == startDate.year &&
+                                      now.month == startDate.month &&
+                                      now.day == startDate.day) &&
+                                  bookingDetails.bookingStatus ==
+                                      "booking_completed")
+                                ActionButton(
+                                  text: "Check In",
+                                  icon: Icons.login,
+                                  color: Colors.green,
+                                  action: _checkIn,
+                                ),
+
+                              // Check-Out Button (only on the end date)
+                              if (now.year == endDate.year &&
+                                  now.month == endDate.month &&
+                                  now.day == endDate.day &&
+                                  bookingDetails.bookingStatus == "check_in")
+                                ActionButton(
+                                  text: "Check Out",
+                                  icon: Icons.logout,
+                                  color: Colors.red,
+                                  action: _checkOut,
+                                ),
+
+                              // Show "Modify" and "Cancel" only before the `startDate`
+                              if (now.isBefore(startDate) &&
+                                  (bookingDetails.bookingStatus ==
+                                          "booking_initiated" ||
+                                      bookingDetails.bookingStatus ==
+                                          "booking_completed")) ...[
+                                ActionButton(
+                                  text: "Modify Booking",
+                                  icon: Icons.edit,
+                                  color: Colors.blue,
+                                  action: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BookingUpdateScreen(
+                                        bookingId: bookingDetails.id,
+                                        hostName: bookingDetails.hostName,
+                                        rate: double.parse(
+                                                bookingDetails.totalCost) /
+                                            bookingDetails.noOfGuests,
+                                        numberOfPersons:
+                                            bookingDetails.noOfGuests,
+                                        startingDate: startDate,
+                                        endingDate: endDate,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ActionButton(
+                                  text: "Cancel Booking",
+                                  icon: Icons.cancel,
+                                  color: Colors.red,
+                                  action: _showBookingCancelDialogueBox,
+                                ),
+                              ],
+
+                              ActionButton(
+                                text: "Contact Host",
+                                icon: Icons.message,
+                                color: Colors.green,
+                                action:
+                                    _showContactHostModal, // Updated to show the modal
+                              ),
+                              // Show "Review" and "Report" only after the `endDate`
+                              if (now.isAfter(endDate) &&
+                                  bookingDetails.bookingStatus ==
+                                      'check_out') ...[
+                                ActionButton(
+                                  text: "Leave a Review",
+                                  icon: Icons.star,
+                                  color: Colors.orange,
+                                  action: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BookingReviewScreen(),
+                                    ),
+                                  ),
+                                ),
+                                ActionButton(
+                                  text: "Report Host",
+                                  icon: Icons.report,
+                                  color: Colors.redAccent,
+                                  action: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ReportHostScreen(
+                                          bookingId: bookingDetails.id),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
                         ),
-                      ),
-                      // 🔥 New Report Host Button
-                      ActionButton(
-                        text: "Report Host",
-                        icon: Icons.report,
-                        color: Colors.redAccent,
-                        action: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReportHostScreen(
-                              bookingId:
-                                  int.parse(bookingId), // Passing booking ID
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                      );
+                    },
+                  );
+                },
               );
             },
           );

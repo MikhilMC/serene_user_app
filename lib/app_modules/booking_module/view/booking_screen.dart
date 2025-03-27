@@ -278,6 +278,8 @@ class _BookingScreenState extends State<BookingScreen> {
                       platformFee: _platformFee,
                     ),
 
+                    const SizedBox(height: 16.0),
+
                     // Submit Button
                     CustomButton(
                       buttonWidth: double.infinity,
