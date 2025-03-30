@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:serene_user_app/app_modules/booking_details_module/model/property_action_response_model.dart';
+import 'package:serene_user_app/app_models/property_action_response_model/property_action_response_model.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/service/check_in.dart';
 
 part 'check_in_event.dart';

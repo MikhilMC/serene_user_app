@@ -520,17 +520,24 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                               // Payment Details
                               SectionTitle(title: "Payment Details"),
                               DetailRow(
-                                label: "Total Cost",
-                                value:
-                                    "₹${(double.parse(bookingDetails.totalCost) + double.parse(bookingDetails.platformFee)) - double.parse(bookingDetails.refundAmount)}",
+                                label: "Booking Cost",
+                                value: "₹${bookingDetails.totalCost}",
                               ),
                               DetailRow(
-                                label: "Payment Method",
+                                label: "Platform Fee",
+                                value: "₹${bookingDetails.platformFee}",
+                              ),
+                              DetailRow(
+                                label: "Refund Amount",
+                                value: "₹${bookingDetails.refundAmount}",
+                              ),
+                              DetailRow(
+                                label: "Latest Payment Method",
                                 value: _formatPaymentMethod(
                                     bookingDetails.paymentMethod),
                               ),
                               DetailRow(
-                                label: "Payment Status",
+                                label: "Latest Payment Status",
                                 value: paymentStatus,
                                 valueColor: Helper.statusColor(
                                     bookingDetails.paymentStatus),
@@ -583,9 +590,9 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                                       builder: (context) => BookingUpdateScreen(
                                         bookingId: bookingDetails.id,
                                         hostName: bookingDetails.hostName,
-                                        rate: double.parse(
-                                                bookingDetails.totalCost) /
-                                            bookingDetails.noOfGuests,
+                                        rate: bookingDetails.propertyRate,
+                                        platformFee: double.parse(
+                                            bookingDetails.platformFee),
                                         numberOfPersons:
                                             bookingDetails.noOfGuests,
                                         startingDate: startDate,

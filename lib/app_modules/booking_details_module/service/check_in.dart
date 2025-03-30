@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:serene_user_app/app_constants/app_urls.dart';
-import 'package:serene_user_app/app_modules/booking_details_module/model/property_action_response_model.dart';
+import 'package:serene_user_app/app_models/property_action_response_model/property_action_response_model.dart';
 
 Future<PropertyActionResponseModel> checkIn({
   required int bookingId,

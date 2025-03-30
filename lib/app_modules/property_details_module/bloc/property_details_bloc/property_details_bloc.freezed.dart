@@ -338,7 +338,7 @@ mixin _$PropertyDetailsState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(PropertyModel propertyDetails) success,
+    required TResult Function(PropertyDetailsModel propertyDetails) success,
     required TResult Function(String error) error,
   }) =>
       throw _privateConstructorUsedError;
@@ -346,7 +346,7 @@ mixin _$PropertyDetailsState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(PropertyModel propertyDetails)? success,
+    TResult? Function(PropertyDetailsModel propertyDetails)? success,
     TResult? Function(String error)? error,
   }) =>
       throw _privateConstructorUsedError;
@@ -354,7 +354,7 @@ mixin _$PropertyDetailsState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(PropertyModel propertyDetails)? success,
+    TResult Function(PropertyDetailsModel propertyDetails)? success,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) =>
@@ -451,7 +451,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(PropertyModel propertyDetails) success,
+    required TResult Function(PropertyDetailsModel propertyDetails) success,
     required TResult Function(String error) error,
   }) {
     return initial();
@@ -462,7 +462,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(PropertyModel propertyDetails)? success,
+    TResult? Function(PropertyDetailsModel propertyDetails)? success,
     TResult? Function(String error)? error,
   }) {
     return initial?.call();
@@ -473,7 +473,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(PropertyModel propertyDetails)? success,
+    TResult Function(PropertyDetailsModel propertyDetails)? success,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -572,7 +572,7 @@ class _$PropertyDetailsLoadingImpl implements PropertyDetailsLoading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(PropertyModel propertyDetails) success,
+    required TResult Function(PropertyDetailsModel propertyDetails) success,
     required TResult Function(String error) error,
   }) {
     return loading();
@@ -583,7 +583,7 @@ class _$PropertyDetailsLoadingImpl implements PropertyDetailsLoading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(PropertyModel propertyDetails)? success,
+    TResult? Function(PropertyDetailsModel propertyDetails)? success,
     TResult? Function(String error)? error,
   }) {
     return loading?.call();
@@ -594,7 +594,7 @@ class _$PropertyDetailsLoadingImpl implements PropertyDetailsLoading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(PropertyModel propertyDetails)? success,
+    TResult Function(PropertyDetailsModel propertyDetails)? success,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -653,7 +653,7 @@ abstract class _$$PropertyDetailsSuccessImplCopyWith<$Res> {
           $Res Function(_$PropertyDetailsSuccessImpl) then) =
       __$$PropertyDetailsSuccessImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({PropertyModel propertyDetails});
+  $Res call({PropertyDetailsModel propertyDetails});
 }
 
 /// @nodoc
@@ -677,7 +677,7 @@ class __$$PropertyDetailsSuccessImplCopyWithImpl<$Res>
       null == propertyDetails
           ? _value.propertyDetails
           : propertyDetails // ignore: cast_nullable_to_non_nullable
-              as PropertyModel,
+              as PropertyDetailsModel,
     ));
   }
 }
@@ -688,7 +688,7 @@ class _$PropertyDetailsSuccessImpl implements PropertyDetailsSuccess {
   const _$PropertyDetailsSuccessImpl(this.propertyDetails);
 
   @override
-  final PropertyModel propertyDetails;
+  final PropertyDetailsModel propertyDetails;
 
   @override
   String toString() {
@@ -721,7 +721,7 @@ class _$PropertyDetailsSuccessImpl implements PropertyDetailsSuccess {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(PropertyModel propertyDetails) success,
+    required TResult Function(PropertyDetailsModel propertyDetails) success,
     required TResult Function(String error) error,
   }) {
     return success(propertyDetails);
@@ -732,7 +732,7 @@ class _$PropertyDetailsSuccessImpl implements PropertyDetailsSuccess {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(PropertyModel propertyDetails)? success,
+    TResult? Function(PropertyDetailsModel propertyDetails)? success,
     TResult? Function(String error)? error,
   }) {
     return success?.call(propertyDetails);
@@ -743,7 +743,7 @@ class _$PropertyDetailsSuccessImpl implements PropertyDetailsSuccess {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(PropertyModel propertyDetails)? success,
+    TResult Function(PropertyDetailsModel propertyDetails)? success,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {
@@ -792,10 +792,11 @@ class _$PropertyDetailsSuccessImpl implements PropertyDetailsSuccess {
 }
 
 abstract class PropertyDetailsSuccess implements PropertyDetailsState {
-  const factory PropertyDetailsSuccess(final PropertyModel propertyDetails) =
+  const factory PropertyDetailsSuccess(
+          final PropertyDetailsModel propertyDetails) =
       _$PropertyDetailsSuccessImpl;
 
-  PropertyModel get propertyDetails;
+  PropertyDetailsModel get propertyDetails;
 
   /// Create a copy of PropertyDetailsState
   /// with the given fields replaced by the non-null parameter values.
@@ -876,7 +877,7 @@ class _$PropertyDetailsErrorImpl implements PropertyDetailsError {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(PropertyModel propertyDetails) success,
+    required TResult Function(PropertyDetailsModel propertyDetails) success,
     required TResult Function(String error) error,
   }) {
     return error(this.error);
@@ -887,7 +888,7 @@ class _$PropertyDetailsErrorImpl implements PropertyDetailsError {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(PropertyModel propertyDetails)? success,
+    TResult? Function(PropertyDetailsModel propertyDetails)? success,
     TResult? Function(String error)? error,
   }) {
     return error?.call(this.error);
@@ -898,7 +899,7 @@ class _$PropertyDetailsErrorImpl implements PropertyDetailsError {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(PropertyModel propertyDetails)? success,
+    TResult Function(PropertyDetailsModel propertyDetails)? success,
     TResult Function(String error)? error,
     required TResult orElse(),
   }) {

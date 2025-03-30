@@ -19,8 +19,7 @@ class ReviewItemWidget extends StatelessWidget {
           children: [
             ClipOval(
               child: CachedNetworkImage(
-                imageUrl:
-                    'https://picsum.photos/seed/${review['userName']}/100/100',
+                imageUrl: review['profilePicture'],
                 width: 60,
                 height: 60,
                 fit: BoxFit.cover,
@@ -32,7 +31,7 @@ class ReviewItemWidget extends StatelessWidget {
             ),
             const SizedBox(width: 8.0),
             Text(
-              review['userName'],
+              review['username'],
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -40,14 +39,14 @@ class ReviewItemWidget extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8.0),
-        Text(
-          review['title'],
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        // const SizedBox(height: 8.0),
+        // Text(
+        //   review['title'],
+        //   style: const TextStyle(
+        //     fontSize: 16,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
         const SizedBox(height: 4.0),
         Text(
           review['description'],
@@ -87,8 +86,8 @@ class ReviewItemWidget extends StatelessWidget {
                         value: progress.progress,
                         valueColor: AlwaysStoppedAnimation<Color>(
                           AppColors.firstColor,
-                        ), // Fixed: Use AlwaysStoppedAnimation
-                      ), // Loading placeholder
+                        ),
+                      ),
                       errorWidget: (context, url, error) => Icon(Icons.error),
                       width: 100,
                       fit: BoxFit.cover,

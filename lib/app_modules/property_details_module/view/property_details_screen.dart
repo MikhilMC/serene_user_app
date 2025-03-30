@@ -9,55 +9,19 @@ import 'package:serene_user_app/app_modules/property_details_module/bloc/propert
 import 'package:serene_user_app/app_modules/property_details_module/widgets/events_section_widget.dart';
 import 'package:serene_user_app/app_modules/property_details_module/widgets/host_details_widget.dart';
 import 'package:serene_user_app/app_modules/property_details_module/widgets/property_details_widget.dart';
-// import 'package:serene_user_app/app_modules/property_details_module/widgets/review_section_widget.dart';
+import 'package:serene_user_app/app_modules/property_details_module/widgets/review_section_widget.dart';
 import 'package:serene_user_app/app_widgets/custom_button.dart';
 import 'package:serene_user_app/app_widgets/custom_error_widget.dart';
 
 class PropertyDetailsScreen extends StatefulWidget {
   final int propertyId;
-  PropertyDetailsScreen({
+  const PropertyDetailsScreen({
     super.key,
     required this.propertyId,
   });
 
   @override
   State<PropertyDetailsScreen> createState() => _PropertyDetailsScreenState();
-
-  final reviews = [
-    {
-      'userName': 'Alice',
-      'title': 'Great Stay!',
-      'description':
-          'The apartment was clean and comfortable. Highly recommended!',
-      'rating': 4.5,
-      'images': [
-        'https://picsum.photos/seed/review1/200/200',
-        'https://picsum.photos/seed/review2/200/200',
-      ],
-    },
-    {
-      'userName': 'Bob',
-      'title': 'Amazing Location',
-      'description':
-          'The location was perfect, and the host was very responsive.',
-      'rating': 5.0,
-      'images': [],
-    },
-  ];
-
-  // Dummy data for events
-  final event = {
-    'title': 'Summer Music Festival',
-    'description':
-        'Join us for a weekend of live music, food, and fun activities!',
-    'startDate': '2023-07-15',
-    'endDate': '2023-07-17',
-    'images': [
-      'https://picsum.photos/seed/event1/400/300',
-      'https://picsum.photos/seed/event2/400/300',
-      'https://picsum.photos/seed/event3/400/300',
-    ],
-  };
 }
 
 class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
@@ -100,8 +64,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
           if (state is PropertyDetailsSuccess) {
             // Update host name and rate when success state is received
             setState(() {
-              _hostName = state.propertyDetails.name;
-              _rate = double.parse(state.propertyDetails.rate);
+              _hostName = state.propertyDetails.hostDetails.name;
+              _rate = double.parse(state.propertyDetails.hostDetails.rate);
             });
           }
         },
@@ -123,28 +87,41 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
           final propertyDetails = state.propertyDetails;
 
           final host = {
-            'name': propertyDetails.name,
-            'email': propertyDetails.email,
-            'phone': propertyDetails.phoneNumber,
+            'name': propertyDetails.hostDetails.name,
+            'email': propertyDetails.hostDetails.email,
+            'phone': propertyDetails.hostDetails.phoneNumber,
             'profilePicture':
-                "${AppUrls.baseUrl}${propertyDetails.profilePicture}",
+                "${AppUrls.baseUrl}${propertyDetails.hostDetails.profilePicture}",
           };
 
           final property = {
-            'type': propertyDetails.propertyType,
-            'address': propertyDetails.address,
-            'placeName': propertyDetails.place,
-            'description': propertyDetails.description,
-            'amenities': propertyDetails.amenities.split(", "),
-            'images': propertyDetails.propertyImages
+            'propertyName': propertyDetails.hostDetails.propertyName,
+            'type': propertyDetails.hostDetails.propertyType,
+            'address': propertyDetails.hostDetails.address,
+            'placeName': propertyDetails.hostDetails.place,
+            'description': propertyDetails.hostDetails.description,
+            'amenities': propertyDetails.hostDetails.amenities.split(", "),
+            'images': propertyDetails.hostDetails.propertyImages
                 .map((image) => "${AppUrls.baseUrl}$image")
                 .toList(),
-            'dailyRate': double.parse(propertyDetails.rate),
-            'averageRating': double.parse(propertyDetails.rating),
-            'reviewCount': propertyDetails.reviewCount,
-            'maxCapacity': propertyDetails.maxCapacity,
-            'numberOfRooms': propertyDetails.rooms,
+            'dailyRate': double.parse(propertyDetails.hostDetails.rate),
+            'averageRating': double.parse(propertyDetails.hostDetails.rating),
+            'reviewCount': propertyDetails.hostDetails.reviewCount,
+            'maxCapacity': propertyDetails.hostDetails.maxCapacity,
+            'numberOfRooms': propertyDetails.hostDetails.rooms,
           };
+
+          final reviews = propertyDetails.reviews.map((review) {
+            return {
+              'username': review.username,
+              'profilePicture': "${AppUrls.baseUrl}${review.profilePicture}",
+              'description': review.feedback,
+              'rating': review.starRating,
+              'images': review.images
+                  .map((image) => "${AppUrls.baseUrl}$image")
+                  .toList(),
+            };
+          }).toList();
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -166,7 +143,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                 const SizedBox(height: 24.0),
 
                 // Reviews Section
-                // ReviewSectionWidget(reviews: widget.reviews),
+                ReviewSectionWidget(reviews: reviews),
               ],
             ),
           );

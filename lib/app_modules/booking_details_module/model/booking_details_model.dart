@@ -17,6 +17,7 @@ class BookingDetailsModel {
   double hostRating;
   List<String> propertyImages;
   String propertyName;
+  double propertyRate;
   DateTime startDate;
   DateTime endDate;
   int noOfGuests;
@@ -40,6 +41,7 @@ class BookingDetailsModel {
     required this.hostRating,
     required this.propertyImages,
     required this.propertyName,
+    required this.propertyRate,
     required this.startDate,
     required this.endDate,
     required this.noOfGuests,
@@ -66,6 +68,7 @@ class BookingDetailsModel {
         propertyImages:
             List<String>.from(json["property_images"].map((x) => x)),
         propertyName: json["property_name"],
+        propertyRate: json["property_rate"]?.toDouble(),
         startDate: DateTime.parse(json["start_date"]),
         endDate: DateTime.parse(json["end_date"]),
         noOfGuests: json["no_of_guests"],
@@ -90,6 +93,7 @@ class BookingDetailsModel {
         "host_rating": hostRating,
         "property_images": List<dynamic>.from(propertyImages.map((x) => x)),
         "property_name": propertyName,
+        "property_rate": propertyRate,
         "start_date":
             "${startDate.year.toString().padLeft(4, '0')}-${startDate.month.toString().padLeft(2, '0')}-${startDate.day.toString().padLeft(2, '0')}",
         "end_date":

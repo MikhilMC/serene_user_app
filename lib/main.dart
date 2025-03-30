@@ -6,6 +6,7 @@ import 'package:serene_user_app/app_modules/booking_details_module/bloc/cancel_b
 import 'package:serene_user_app/app_modules/booking_details_module/bloc/check_in_bloc/check_in_bloc.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/bloc/check_out_bloc/check_out_bloc.dart';
 import 'package:serene_user_app/app_modules/booking_module/bloc/add_booking_bloc/add_booking_bloc.dart';
+import 'package:serene_user_app/app_modules/booking_module/bloc/update_booking_bloc/update_booking_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/property_list_bloc/property_list_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_bookings_bloc/user_bookings_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc/user_profile_bloc.dart';
@@ -69,6 +70,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => CheckOutBloc(),
+        ),
+        BlocProvider(
+          create: (context) => UpdateBookingBloc(),
         ),
       ],
       child: MaterialApp(

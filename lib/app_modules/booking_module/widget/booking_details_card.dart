@@ -46,6 +46,7 @@ class BookingDetailsCard extends StatelessWidget {
               value: '₹${totalRate.toStringAsFixed(2)}',
               valueStyle: const TextStyle(
                 color: Colors.green,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -57,6 +58,7 @@ class BookingDetailsCard extends StatelessWidget {
               value: '₹${platformFee.toStringAsFixed(2)}',
               valueStyle: const TextStyle(
                 color: Colors.green,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),

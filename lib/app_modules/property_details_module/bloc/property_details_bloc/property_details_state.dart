@@ -5,7 +5,7 @@ class PropertyDetailsState with _$PropertyDetailsState {
   const factory PropertyDetailsState.initial() = _Initial;
   const factory PropertyDetailsState.loading() = PropertyDetailsLoading;
   const factory PropertyDetailsState.success(
-    PropertyModel propertyDetails,
+    PropertyDetailsModel propertyDetails,
   ) = PropertyDetailsSuccess;
   const factory PropertyDetailsState.error(
     String error,

@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 
 import 'package:serene_user_app/app_constants/app_urls.dart';
-import 'package:serene_user_app/app_models/property_model/property_model.dart';
+import 'package:serene_user_app/app_modules/property_details_module/model/property_details_model.dart';
 
-Future<PropertyModel> getPropertyDetails({
+Future<PropertyDetailsModel> getPropertyDetails({
   required int propertyId,
 }) async {
   try {
@@ -26,7 +26,7 @@ Future<PropertyModel> getPropertyDetails({
 
     if (resp.statusCode == 200) {
       final dynamic decoded = jsonDecode(resp.body);
-      final response = PropertyModel.fromJson(decoded);
+      final response = PropertyDetailsModel.fromJson(decoded);
 
       return response;
     } else {
