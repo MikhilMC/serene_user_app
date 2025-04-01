@@ -17,6 +17,7 @@ import 'package:serene_user_app/app_modules/payment_module/bloc/make_payment_blo
 import 'package:serene_user_app/app_modules/property_details_module/bloc/host_events_bloc/host_events_bloc.dart';
 import 'package:serene_user_app/app_modules/property_details_module/bloc/property_details_bloc/property_details_bloc.dart';
 import 'package:serene_user_app/app_modules/register_module/bloc/user_register_bloc.dart';
+import 'package:serene_user_app/app_modules/report_host_module/bloc/report_host_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -77,6 +78,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => SubmitReviewBloc(),
+        ),
+        BlocProvider(
+          create: (context) => ReportHostBloc(),
         ),
       ],
       child: MaterialApp(

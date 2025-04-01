@@ -20,4 +20,5 @@ class AppUrls {
   static const String checkOutUrl = "$userAppUrl/check_out/";
   static const String updateBookingUrl = "$userAppUrl/update_booking/";
   static const String submitReviewUrl = "$userAppUrl/review/";
+  static const String reportHostUrl = "$userAppUrl/report/";
 }

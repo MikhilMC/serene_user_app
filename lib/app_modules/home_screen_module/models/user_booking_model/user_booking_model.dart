@@ -33,6 +33,7 @@ class UserBookingModel {
   List<int> paymentIds;
   bool reviewSubmitted;
   bool reportSubmitted;
+  bool hostReportSubmitted;
   int user;
   int host;
 
@@ -58,6 +59,7 @@ class UserBookingModel {
     required this.paymentIds,
     required this.reviewSubmitted,
     required this.reportSubmitted,
+    required this.hostReportSubmitted,
     required this.user,
     required this.host,
   });
@@ -86,6 +88,7 @@ class UserBookingModel {
         paymentIds: List<int>.from(json["payment_ids"].map((x) => x)),
         reviewSubmitted: json["review_submitted"],
         reportSubmitted: json["report_submitted"],
+        hostReportSubmitted: json["host_report_submitted"],
         user: json["user"],
         host: json["host"],
       );
@@ -114,6 +117,7 @@ class UserBookingModel {
         "payment_ids": List<dynamic>.from(paymentIds.map((x) => x)),
         "review_submitted": reviewSubmitted,
         "report_submitted": reportSubmitted,
+        "host_report_submitted": hostReportSubmitted,
         "user": user,
         "host": host,
       };

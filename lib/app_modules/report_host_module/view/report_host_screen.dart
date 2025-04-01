@@ -1,8 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/view/home_screen.dart';
+import 'package:serene_user_app/app_modules/report_host_module/bloc/report_host_bloc.dart';
+import 'package:serene_user_app/app_modules/report_host_module/class/report_details.dart';
+import 'package:serene_user_app/app_utils/app_helper.dart';
 import 'package:serene_user_app/app_widgets/custom_button.dart';
+import 'package:serene_user_app/app_widgets/overlay_loader_widget.dart';
 
 class ReportHostScreen extends StatefulWidget {
   final int bookingId;
@@ -53,26 +59,30 @@ class _ReportHostScreenState extends State<ReportHostScreen> {
 
   /// Function to submit the form
   Future<void> _submitReport() async {
-    if (_formKey.currentState!.validate() && _selectedTitle != null) {
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Report submitted successfully'),
-            backgroundColor: Colors.green,
-          ),
+    FocusScope.of(context).unfocus();
+    if (_selectedTitle != null) {
+      if (_formKey.currentState!.validate()) {
+        final ReportDetails reportDetails = ReportDetails(
+          bookingId: widget.bookingId,
+          title: _selectedTitle!,
+          description: _descriptionController.text.trim(),
+          images: _images.isNotEmpty ? _images : null,
         );
 
-        Navigator.pop(context);
+        final ReportHostBloc reportHostBloc =
+            BlocProvider.of<ReportHostBloc>(context);
+
+        reportHostBloc.add(ReportHostEvent.hostReported(reportDetails));
+      } else {
+        AppHelper.showErrorDialogue(
+          context,
+          "Please enter description",
+        );
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill all fields'),
-          backgroundColor: Colors.red,
-        ),
+      AppHelper.showErrorDialogue(
+        context,
+        "Please select title",
       );
     }
   }
@@ -85,156 +95,200 @@ class _ReportHostScreenState extends State<ReportHostScreen> {
         centerTitle: true,
         // backgroundColor: Colors.deepPurple,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Dropdown for complaint titles
-                  const Text(
-                    "Complaint Title",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    value: _selectedTitle,
-                    decoration: InputDecoration(
-                      hintText: "Select Complaint Title",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 16),
-                    ),
-                    items: _complaintTitles.map((title) {
-                      return DropdownMenuItem(
-                        value: title,
-                        child: Text(title),
-                      );
-                    }).toList(),
-                    onChanged: (value) => setState(() {
-                      _selectedTitle = value;
-                    }),
-                    validator: (value) =>
-                        value == null ? "Please select a title" : null,
-                  ),
-                  const SizedBox(height: 20),
+      body: BlocConsumer<ReportHostBloc, ReportHostState>(
+        listener: (context, state) {
+          state.whenOrNull(
+            loading: () {},
+            success: (response) {
+              if (response.status == "success") {
+                AppHelper.showCustomSnackBar(
+                  context,
+                  "Reporting against your host successfull",
+                );
 
-                  // Multiline TextField for description
-                  const Text(
-                    "Description",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomeScreen(),
                   ),
-                  const SizedBox(height: 8),
-                  TextFormField(
-                    controller: _descriptionController,
-                    maxLines: 5,
-                    decoration: InputDecoration(
-                      hintText: "Enter complaint description...",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      contentPadding: const EdgeInsets.all(16),
-                    ),
-                    validator: (value) => value!.isEmpty
-                        ? "Please enter a complaint description"
-                        : null,
-                  ),
-                  const SizedBox(height: 20),
+                  (route) => false,
+                );
+              } else {
+                AppHelper.showErrorDialogue(
+                  context,
+                  "Host Reporting Failed",
+                );
+              }
+            },
+            failure: (errorMessage) => AppHelper.showErrorDialogue(
+              context,
+              "Host Reporting Failed: $errorMessage",
+            ),
+          );
+        },
+        builder: (context, state) {
+          bool isLoading = state.maybeWhen(
+            loading: () => true,
+            orElse: () => false,
+          );
 
-                  // Image Picker Button
-                  ElevatedButton.icon(
-                    onPressed: _pickImages,
-                    icon: const Icon(
-                      Icons.add_a_photo,
-                      color: Colors.white,
-                    ),
-                    label: const Text(
-                      "Add Images",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 12, horizontal: 24),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      backgroundColor: Colors.blue,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Displaying Images in GridView
-                  if (_images.isNotEmpty)
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                      ),
-                      itemCount: _images.length,
-                      itemBuilder: (context, index) {
-                        return Stack(
-                          children: [
-                            ClipRRect(
+          return OverlayLoaderWidget(
+            isLoading: isLoading,
+            childWidget: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Dropdown for complaint titles
+                        const Text(
+                          "Complaint Title",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        DropdownButtonFormField<String>(
+                          value: _selectedTitle,
+                          decoration: InputDecoration(
+                            hintText: "Select Complaint Title",
+                            border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              child: Image.file(
-                                _images[index],
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: double.infinity,
-                              ),
                             ),
-                            Positioned(
-                              top: 4,
-                              right: 4,
-                              child: Container(
-                                height: 25,
-                                decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  onPressed: () => _removeImage(index),
-                                  icon: const Icon(
-                                    Icons.close,
-                                    color: Colors.white,
-                                    size: 16,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 16),
+                          ),
+                          items: _complaintTitles.map((title) {
+                            return DropdownMenuItem(
+                              value: title,
+                              child: Text(title),
+                            );
+                          }).toList(),
+                          onChanged: (value) => setState(() {
+                            _selectedTitle = value;
+                          }),
+                          validator: (value) =>
+                              value == null ? "Please select a title" : null,
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Multiline TextField for description
+                        const Text(
+                          "Description",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        TextFormField(
+                          controller: _descriptionController,
+                          maxLines: 5,
+                          decoration: InputDecoration(
+                            hintText: "Enter complaint description...",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            contentPadding: const EdgeInsets.all(16),
+                          ),
+                          validator: (value) => value!.isEmpty
+                              ? "Please enter a complaint description"
+                              : null,
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Image Picker Button
+                        ElevatedButton.icon(
+                          onPressed: _pickImages,
+                          icon: const Icon(
+                            Icons.add_a_photo,
+                            color: Colors.white,
+                          ),
+                          label: const Text(
+                            "Add Images",
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 12, horizontal: 24),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            backgroundColor: Colors.blue,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Displaying Images in GridView
+                        if (_images.isNotEmpty)
+                          GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                            ),
+                            itemCount: _images.length,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(
+                                      _images[index],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
                                   ),
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                                  Positioned(
+                                    top: 4,
+                                    right: 4,
+                                    child: Container(
+                                      height: 25,
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: IconButton(
+                                        onPressed: () => _removeImage(index),
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 16,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+
+                        const SizedBox(height: 20),
+
+                        // Submit Button
+                        CustomButton(
+                          buttonWidth: double.infinity,
+                          backgroundColor: AppColors.firstColor,
+                          textColor: Colors.white,
+                          labelText: "Submit Report",
+                          onClick: _submitReport,
+                        ),
+                      ],
                     ),
-
-                  const SizedBox(height: 20),
-
-                  // Submit Button
-                  CustomButton(
-                    buttonWidth: double.infinity,
-                    backgroundColor: AppColors.firstColor,
-                    textColor: Colors.white,
-                    labelText: "Submit Report",
-                    onClick: _submitReport,
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
