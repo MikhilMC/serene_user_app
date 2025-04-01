@@ -620,30 +620,35 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
                               if (now.isAfter(endDate) &&
                                   bookingDetails.bookingStatus ==
                                       'check_out') ...[
-                                ActionButton(
-                                  text: "Leave a Review",
-                                  icon: Icons.star,
-                                  color: Colors.orange,
-                                  action: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          BookingReviewScreen(),
+                                if (!bookingDetails.reviewSubmitted)
+                                  ActionButton(
+                                    text: "Leave a Review",
+                                    icon: Icons.star,
+                                    color: Colors.orange,
+                                    action: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            BookingReviewScreen(
+                                          bookingId: widget.bookingId,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                ActionButton(
-                                  text: "Report Host",
-                                  icon: Icons.report,
-                                  color: Colors.redAccent,
-                                  action: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ReportHostScreen(
-                                          bookingId: bookingDetails.id),
+                                if (!bookingDetails.reportSubmitted)
+                                  ActionButton(
+                                    text: "Report Host",
+                                    icon: Icons.report,
+                                    color: Colors.redAccent,
+                                    action: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ReportHostScreen(
+                                          bookingId: bookingDetails.id,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ],
                           ),

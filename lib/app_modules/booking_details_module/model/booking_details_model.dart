@@ -30,6 +30,8 @@ class BookingDetailsModel {
   String platformFee;
   DateTime updatedDate;
   List<int> paymentIds;
+  bool reviewSubmitted;
+  bool reportSubmitted;
   int user;
   int host;
   int noOfDays;
@@ -54,6 +56,8 @@ class BookingDetailsModel {
     required this.platformFee,
     required this.updatedDate,
     required this.paymentIds,
+    required this.reviewSubmitted,
+    required this.reportSubmitted,
     required this.user,
     required this.host,
     required this.noOfDays,
@@ -81,6 +85,8 @@ class BookingDetailsModel {
         platformFee: json["platform_fee"],
         updatedDate: DateTime.parse(json["updated_date"]),
         paymentIds: List<int>.from(json["payment_ids"].map((x) => x)),
+        reviewSubmitted: json["review_submitted"],
+        reportSubmitted: json["report_submitted"],
         user: json["user"],
         host: json["host"],
         noOfDays: json["no_of_days"],
@@ -108,6 +114,8 @@ class BookingDetailsModel {
         "platform_fee": platformFee,
         "updated_date": updatedDate.toIso8601String(),
         "payment_ids": List<dynamic>.from(paymentIds.map((x) => x)),
+        "review_submitted": reviewSubmitted,
+        "report_submitted": reportSubmitted,
         "user": user,
         "host": host,
         "no_of_days": noOfDays,
