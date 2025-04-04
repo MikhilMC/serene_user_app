@@ -281,8 +281,6 @@ class _BookingDetailsScreenState extends State<BookingDetailsScreen> {
 
   String _formatPaymentMethod(String paymentMethod) {
     switch (paymentMethod) {
-      case "cash_on_arrival":
-        return "Cash On Arrival";
       case "upi":
         return "UPI";
       default:

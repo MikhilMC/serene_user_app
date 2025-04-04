@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/payment_module/widget/card_payment.dart';
-import 'package:serene_user_app/app_modules/payment_module/widget/cash_on_arrival.dart';
 import 'package:serene_user_app/app_modules/payment_module/widget/google_pay.dart';
 import 'package:serene_user_app/app_widgets/custom_button.dart';
 
@@ -26,10 +25,6 @@ class PaymentScreen extends StatefulWidget {
 class _PaymentScreenState extends State<PaymentScreen> {
   String? selectedBank;
   final List<Map<String, String>> banks = [
-    {
-      'name': 'Cash on Arrival',
-      'image': 'assets/icons/icons8-cash-on-delivery-64.png',
-    },
     {
       'name': 'Google Pay',
       'image': 'assets/icons/icons8-google-pay-48.png',
@@ -62,11 +57,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       isScrollControlled: true,
       builder: (context) {
         switch (selectedBank) {
-          case "Cash on Arrival":
-            return CashOnArrival(
-              bookingId: widget.bookingId,
-              amount: widget.amount + widget.platformFee,
-            );
           case "Google Pay":
             return GooglePay(
               bookingId: widget.bookingId,
