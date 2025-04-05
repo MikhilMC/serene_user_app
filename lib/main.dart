@@ -1,5 +1,7 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/bloc/booking_details_bloc/booking_details_bloc.dart';
 import 'package:serene_user_app/app_modules/booking_details_module/bloc/cancel_booking_bloc/cancel_booking_bloc.dart';
@@ -11,20 +13,45 @@ import 'package:serene_user_app/app_modules/booking_review_module/bloc/submit_re
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/property_list_bloc/property_list_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_bookings_bloc/user_bookings_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_profile_bloc/user_profile_bloc.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/bloc/username_bloc/username_bloc.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/view/home_screen.dart';
 import 'package:serene_user_app/app_modules/introduction_screen_module/view/introduction_screen.dart';
 import 'package:serene_user_app/app_modules/login_module/bloc/login_bloc.dart';
+import 'package:serene_user_app/app_modules/login_module/view/login_screen.dart';
 import 'package:serene_user_app/app_modules/payment_module/bloc/make_payment_bloc.dart';
 import 'package:serene_user_app/app_modules/property_details_module/bloc/host_events_bloc/host_events_bloc.dart';
 import 'package:serene_user_app/app_modules/property_details_module/bloc/property_details_bloc/property_details_bloc.dart';
 import 'package:serene_user_app/app_modules/register_module/bloc/user_register_bloc.dart';
 import 'package:serene_user_app/app_modules/report_host_module/bloc/report_host_bloc.dart';
+import 'package:serene_user_app/app_utils/app_local_storage.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  bool isFirstLaunch = await AppLocalStorage.getIntroScreenStatus();
+  bool isLoggedIn = await AppLocalStorage.getLoginStatus();
+
+  Widget initialScreen;
+
+  if (isFirstLaunch) {
+    initialScreen = const IntroductionScreen();
+  } else {
+    if (isLoggedIn) {
+      initialScreen = const HomeScreen();
+    } else {
+      initialScreen = const LoginScreen();
+    }
+  }
+  runApp(MyApp(
+    initialWidget: initialScreen,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Widget initialWidget;
+  const MyApp({
+    super.key,
+    required this.initialWidget,
+  });
 
   // Add a global navigator key
   static final GlobalKey<NavigatorState> navigatorKey =
@@ -82,6 +109,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => ReportHostBloc(),
         ),
+        BlocProvider(
+          create: (context) => UsernameBloc(),
+        ),
       ],
       child: MaterialApp(
         title: 'Serene',
@@ -93,7 +123,7 @@ class MyApp extends StatelessWidget {
           ),
           useMaterial3: true,
         ),
-        home: const IntroductionScreen(),
+        home: initialWidget,
       ),
     );
   }

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/utils/random_generator.dart';
+import 'package:serene_user_app/app_modules/home_screen_module/bloc/username_bloc/username_bloc.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/widget/explore_widget.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/widget/home_widget.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/widget/my_bookings_widget.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/widget/profile_widget.dart';
 import 'package:serene_user_app/app_modules/login_module/view/login_screen.dart';
+import 'package:serene_user_app/app_utils/app_local_storage.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -33,13 +35,23 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       const ExploreWidget(),
-      MyBookingsWidget(
-        bookings:
-            generateRandomBookingHistory(10), // Generate 10 random bookings
-      ),
+      const MyBookingsWidget(),
       const ProfileWidget(),
     ];
+    context.read<UsernameBloc>().add(UsernameEvent.usernameRetreived());
     super.initState();
+  }
+
+  Future<void> _logout() async {
+    await AppLocalStorage.userLogout();
+    if (mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+        (Route<dynamic> route) => false, // Remove all previous routes
+      );
+    }
   }
 
   @override
@@ -53,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 height: 60,
                 width: 60,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage("assets/images/logo_dark.png"),
                     alignment: Alignment.topCenter,
@@ -62,13 +74,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Text(
-              "Hello, John",
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 35,
-                fontWeight: FontWeight.bold,
-              ),
+            BlocBuilder<UsernameBloc, UsernameState>(
+              builder: (context, state) {
+                if (state is UsernameError) {
+                  return Text(
+                    "Error: ${state.errorMessage}",
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }
+
+                if (state is! UsernameSuccess) {
+                  return const Text(
+                    "Loading...",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }
+
+                return Text(
+                  "Hello, ${state.username}",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                );
+              },
             )
           ],
         ),
@@ -98,22 +136,22 @@ class _HomeScreenState extends State<HomeScreen> {
           type: BottomNavigationBarType.shifting,
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: const Icon(Icons.home),
               label: "Home",
               backgroundColor: AppColors.fourthColor,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.explore),
+              icon: const Icon(Icons.explore),
               label: "Explore",
               backgroundColor: AppColors.fourthColor,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.hotel),
+              icon: const Icon(Icons.hotel),
               label: "My Bookings",
               backgroundColor: AppColors.fourthColor,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: const Icon(Icons.person),
               label: "Profile",
               backgroundColor: AppColors.fourthColor,
             ),
@@ -134,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           padding: const EdgeInsets.all(0),
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: AppColors.firstColor,
               ),
@@ -160,12 +198,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   fontSize: 20,
                 ),
               ),
-              onTap: () => Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (context) => LoginScreen(),
-                ),
-                (Route<dynamic> route) => false, // Remove all previous routes
-              ),
+              onTap: _logout,
             ),
           ],
         ),

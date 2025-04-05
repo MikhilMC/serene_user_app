@@ -5,10 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:serene_user_app/app_constants/app_urls.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/models/user_profile_model/user_profile_model.dart';
+import 'package:serene_user_app/app_utils/app_local_storage.dart';
 
 Future<UserProfileModel> getProfileData() async {
   try {
-    int userId = 8;
+    int userId = await AppLocalStorage.getUserId();
     Map<String, dynamic> params = {
       "id": userId.toString(),
     };

@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/bloc/user_bookings_bloc/user_bookings_bloc.dart';
-import 'package:serene_user_app/app_modules/home_screen_module/models/booking.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/widget/booking_card.dart';
 import 'package:serene_user_app/app_widgets/custom_error_widget.dart';
 import 'package:serene_user_app/app_widgets/empty_list.dart';
 
 class MyBookingsWidget extends StatefulWidget {
-  final List<Booking> bookings;
-
-  const MyBookingsWidget({super.key, required this.bookings});
+  const MyBookingsWidget({super.key});
 
   @override
   State<MyBookingsWidget> createState() => _MyBookingsWidgetState();

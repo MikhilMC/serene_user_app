@@ -3,6 +3,7 @@ import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/first_page_module/view/first_screen.dart';
 import 'package:serene_user_app/app_modules/introduction_screen_module/models/onboarding_page_model.dart';
 import 'package:serene_user_app/app_modules/introduction_screen_module/widgets/onboarding_page_presenter.dart';
+import 'package:serene_user_app/app_utils/app_local_storage.dart';
 
 class IntroductionScreen extends StatelessWidget {
   const IntroductionScreen({super.key});
@@ -49,16 +50,24 @@ class IntroductionScreen extends StatelessWidget {
             isLightBackground: true,
           ),
         ],
-        onSkip: () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => FirstScreen(),
-          ),
-        ),
-        onFinish: () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => FirstScreen(),
-          ),
-        ),
+        onSkip: () async {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => FirstScreen(),
+            ),
+          );
+
+          await AppLocalStorage.disableIntroScreen();
+        },
+        onFinish: () async {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => FirstScreen(),
+            ),
+          );
+
+          await AppLocalStorage.disableIntroScreen();
+        },
       ),
     );
   }

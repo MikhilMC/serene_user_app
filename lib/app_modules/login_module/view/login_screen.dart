@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:serene_user_app/app_constants/app_colors.dart';
 import 'package:serene_user_app/app_modules/home_screen_module/view/home_screen.dart';
@@ -7,11 +8,13 @@ import 'package:serene_user_app/app_modules/login_module/bloc/login_bloc.dart';
 import 'package:serene_user_app/app_modules/login_module/class/login_details.dart';
 import 'package:serene_user_app/app_modules/register_module/view/register_screen.dart';
 import 'package:serene_user_app/app_utils/app_helper.dart';
+import 'package:serene_user_app/app_utils/app_local_storage.dart';
 import 'package:serene_user_app/app_widgets/blurry_container/src/container.dart';
 import 'package:serene_user_app/app_widgets/custom_button.dart';
 import 'package:serene_user_app/app_widgets/normal_text_field.dart';
 import 'package:serene_user_app/app_widgets/overlay_loader_widget.dart';
 import 'package:serene_user_app/app_widgets/password_text_field.dart';
+import 'package:serene_user_app/main.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -64,24 +67,32 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
           state.whenOrNull(
-            success: (loginResponseModel) {
+            success: (loginResponseModel) async {
               if (loginResponseModel.status == "success") {
-                AppHelper.showCustomSnackBar(
-                  context,
-                  "Success: ${loginResponseModel.message}",
+                await AppLocalStorage.userLogin(
+                  username: loginResponseModel.user.username,
+                  userId: loginResponseModel.user.id,
                 );
 
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HomeScreen(),
-                  ),
-                );
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  MyApp.navigatorKey.currentState?.pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => HomeScreen(),
+                    ),
+                  );
+
+                  AppHelper.showCustomSnackBar(
+                    context,
+                    "Success: ${loginResponseModel.message}",
+                  );
+                });
               } else {
-                AppHelper.showErrorDialogue(
-                  context,
-                  "User Login Failed",
-                );
+                SchedulerBinding.instance.addPostFrameCallback((_) {
+                  AppHelper.showErrorDialogue(
+                    context,
+                    "User Login Failed",
+                  );
+                });
               }
             },
             failure: (errorMessage) {

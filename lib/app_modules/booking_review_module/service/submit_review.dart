@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:serene_user_app/app_constants/app_urls.dart';
 import 'package:serene_user_app/app_models/property_action_response_model/property_action_response_model.dart';
 import 'package:serene_user_app/app_modules/booking_review_module/class/review_details.dart';
+import 'package:serene_user_app/app_utils/app_local_storage.dart';
 
 Future<PropertyActionResponseModel> submitReview({
   required ReviewDetails reviewDetails,
@@ -16,7 +17,7 @@ Future<PropertyActionResponseModel> submitReview({
       Uri.parse(AppUrls.submitReviewUrl),
     );
 
-    final int userId = 8;
+    final int userId = await AppLocalStorage.getUserId();
     request.fields['user'] = userId.toString();
     request.fields['booking'] = reviewDetails.boookingId.toString();
     request.fields['star_rating'] = reviewDetails.starRating.toString();
