@@ -104,7 +104,7 @@ class _BookingUpdateScreenState extends State<BookingUpdateScreen> {
             : null,
         platformFee:
             _platformFee > widget.platformFee ? currentRate * 0.1 : null,
-        refundAmount: currentRate > 0 ? _totalRate - _previousTotalCost : null,
+        refundAmount: currentRate < 0 ? _previousTotalCost - _totalRate : null,
       );
 
       final UpdateBookingBloc updateBookingBloc =

@@ -118,7 +118,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
               'description': review.feedback,
               'rating': review.starRating,
               'images': review.images
-                  .map((image) => "${AppUrls.baseUrl}$image")
+                  .map((image) => "${AppUrls.baseUrl}${image.image}")
                   .toList(),
             };
           }).toList();

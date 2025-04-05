@@ -15,7 +15,7 @@ class Review {
   double starRating;
   String feedback;
   DateTime createdAt;
-  List<String> images;
+  List<Image> images;
   String username;
   String profilePicture;
 
@@ -38,7 +38,7 @@ class Review {
         starRating: json["star_rating"]?.toDouble(),
         feedback: json["feedback"],
         createdAt: DateTime.parse(json["created_at"]),
-        images: List<String>.from(json["images"].map((x) => x)),
+        images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
         username: json["username"],
         profilePicture: json["profile_picture"],
       );
@@ -50,8 +50,28 @@ class Review {
         "star_rating": starRating,
         "feedback": feedback,
         "created_at": createdAt.toIso8601String(),
-        "images": List<dynamic>.from(images.map((x) => x)),
+        "images": List<dynamic>.from(images.map((x) => x.toJson())),
         "username": username,
         "profile_picture": profilePicture,
+      };
+}
+
+class Image {
+  int id;
+  String image;
+
+  Image({
+    required this.id,
+    required this.image,
+  });
+
+  factory Image.fromJson(Map<String, dynamic> json) => Image(
+        id: json["id"],
+        image: json["image"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "image": image,
       };
 }

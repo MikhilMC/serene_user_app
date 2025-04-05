@@ -11,26 +11,29 @@ class ReviewSectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 4.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Reviews',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        elevation: 4.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Reviews',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16.0),
-            ...reviews.map((review) => ReviewItemWidget(review: review)),
-          ],
+              const SizedBox(height: 16.0),
+              ...reviews.map((review) => ReviewItemWidget(review: review)),
+            ],
+          ),
         ),
       ),
     );
